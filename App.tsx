@@ -3,14 +3,16 @@ import { StyleSheet, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Login from './src/views/login';
-
-const Stack = createNativeStackNavigator();
+import Menu from './src/components/menu';
 
 export default function App() {
+  const Stack = createNativeStackNavigator();
+
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen name="Menu" component={Menu} options={{ headerShown: false, statusBarHidden: true }} />
+        <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
       </Stack.Navigator>
     </NavigationContainer>
   );
