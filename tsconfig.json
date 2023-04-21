@@ -3,14 +3,14 @@
     "compilerOptions": {
         "baseUrl": ".",
         "paths": {
-            "*": [
+            "src": [
                 "src/*"
             ],
-            "tests": [
-                "tests/*"
-            ],
-            "@components/*": [
+            "components/*": [
                 "src/components/*"
+            ],
+            "assets/*": [
+                "assets/*"
             ],
         },
     }
