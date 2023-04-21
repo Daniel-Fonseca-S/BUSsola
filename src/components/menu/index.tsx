@@ -1,21 +1,21 @@
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import Login from '@views/login';
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import React from "react";
+import { StyleSheet, Text, View } from "react-native";
+import Login from "../../views/login";
 
 export default function Menu() {
-    const Stack = createNativeStackNavigator();
+	const Stack = createNativeStackNavigator();
     
-    return (
-        <View style={styles.container}>
-            <View style={styles.navbar}>
-                <Text style={{ fontSize: 30 }}>teste</Text>
-            </View>
-            <Stack.Navigator>
-                <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
-            </Stack.Navigator>
-        </View>
-    );
+	return (
+		<View style={styles.container}>
+			<View style={styles.navbar}>
+				<Text style={{ fontSize: 30 }}>teste</Text>
+			</View>
+			<Stack.Navigator>
+				<Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
+			</Stack.Navigator>
+		</View>
+	);
 }
 
 const styles = StyleSheet.create({
