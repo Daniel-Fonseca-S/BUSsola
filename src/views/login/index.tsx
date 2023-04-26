@@ -6,7 +6,7 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export default function Login(navigation: any) {
+export default function Login({ navigation }: any) {
 	const [email, setEmail] = useState("");
 	const [senha, setSenha] = useState("");
 	const [senhaVisivel, setSenhaVisivel] = useState(false); // [true, false]
@@ -51,7 +51,7 @@ export default function Login(navigation: any) {
 					)}
 				/>
 
-				<TouchableOpacity onPress={() => navigation.navigate("esqueceu-senha")}>
+				<TouchableOpacity onPress={() => navigation.navigate("recuperar-senha")}>
 					<Text style={styles.texto}>
 						Esqueceu sua senha?
 					</Text>
