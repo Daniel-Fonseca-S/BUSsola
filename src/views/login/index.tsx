@@ -1,4 +1,5 @@
 import React from "react";
+import Menu from "../../components/menu";
 import { StyleSheet, View } from "react-native";
 import EntradaTexto from "../../components/text-input";
 
@@ -15,6 +16,7 @@ export default function Login() {
 
 	return (
 		<View style={styles.container}>
+			<Menu />
 			<EntradaTexto
 				onChange={() => { console.log("teste"); }}
 				value="teste"
