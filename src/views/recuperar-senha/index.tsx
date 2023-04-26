@@ -97,7 +97,7 @@ export default function RecuperarSenha({navigation}: any) {
 			<Button
 				title="Recuperar"
 				style={styles.botaoConfirmar}
-				onPress={() => { navigation.navigate("login"); }}
+				onPress={() => { navigation.navigate("nova-senha"); }}
 				disabled={codigo.length < 6}
 			/>
 

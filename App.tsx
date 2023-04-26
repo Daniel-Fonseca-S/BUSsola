@@ -5,16 +5,18 @@ import Menu from "./src/components/menu";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import Login from "src/views/login";
 import RecuperarSenha from "src/views/recuperar-senha";
+import NovaSenha from "src/views/nova-senha";
 
 export default function App() {
 	const Drawer = createDrawerNavigator();
 
 	return (
 		<NavigationContainer>
-			<Drawer.Navigator initialRouteName="recuperar-senha">
-				<Drawer.Screen name="Menu" component={Menu} />
+			<Drawer.Navigator initialRouteName="login">
+				{/* <Drawer.Screen name="Menu" component={Menu} /> */}
 				<Drawer.Screen name="login" component={Login} />
 				<Drawer.Screen name="recuperar-senha" component={RecuperarSenha} />
+				<Drawer.Screen name="nova-senha" component={NovaSenha} />
 			</Drawer.Navigator>
 			{/* <Stack.Navigator initialRouteName='Menu'>
 				<Stack.Screen name="Menu" component={Menu} options={{ headerShown: false, statusBarHidden: true }} />
