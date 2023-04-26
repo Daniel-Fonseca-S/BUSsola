@@ -1,6 +1,6 @@
 import { Button, Text, TextInput } from "@react-native-material/core";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { KeyboardAvoidingView, StyleSheet, TextInput as Input, View } from "react-native";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
