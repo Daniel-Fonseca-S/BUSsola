@@ -7,6 +7,7 @@ const syles = StyleSheet.create({
 		alignItems: "center",
 		justifyContent: "space-between",
 		width: "100%",
+		paddingTop: 20,
 	},
 	content: {
 		backgroundColor: "#1E1E1E",
