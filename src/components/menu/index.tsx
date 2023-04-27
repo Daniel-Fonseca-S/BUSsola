@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { routes } from "./routes";
+import { routes } from "../../utils/routes";
 import { navigationPop, navigationPush } from "src/utils/navigationFun";
 import { Image, Modal, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 

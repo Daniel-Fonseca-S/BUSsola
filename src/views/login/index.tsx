@@ -79,7 +79,8 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		alignItems: "center",
-		backgroundColor: "#000"
+		backgroundColor: "#000",
+		paddingTop: 50
 	},
 	meio: {
 		width: "100%",

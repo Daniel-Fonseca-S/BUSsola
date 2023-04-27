@@ -1,4 +1,5 @@
 import React from "react";
+import Rota from "src/views/main";
 import Login from "src/views/login";
 import NovaSenha from "src/views/nova-senha";
 import RecuperarSenha from "src/views/recuperar-senha";
@@ -15,9 +16,10 @@ export default function App() {
 		<SafeAreaView style={styles.container}>
 			<NavigationContainer ref={navigationRef}>
 				<Stack.Navigator>
-					<Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
+					<Stack.Screen name="Log Out" component={Login} options={{ headerShown: false }} />
 					<Stack.Screen name="Nova Senha" component={NovaSenha} options={{ headerShown: false }} />
 					<Stack.Screen name="Recuperar Senha" component={RecuperarSenha} options={{ headerShown: false }} />
+					<Stack.Screen name="Home" component={Rota} options={{ headerShown: false }} />
 				</Stack.Navigator>
 			</NavigationContainer>
 		</SafeAreaView>
