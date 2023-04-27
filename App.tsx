@@ -7,6 +7,7 @@ import RecuperarSenha from "src/views/recuperar-senha";
 import { SafeAreaView, StyleSheet } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer, createNavigationContainerRef } from "@react-navigation/native";
+import SelecionarRota from "src/views/select-rota";
 
 export const navigationRef = createNavigationContainerRef();
 
@@ -22,6 +23,7 @@ export default function App() {
 					<Stack.Screen name="Recuperar Senha" component={RecuperarSenha} options={{ headerShown: false }} />
 					<Stack.Screen name="Home" component={Rota} options={{ headerShown: false }} />
 					<Stack.Screen name="Cadastro" component={Cadastro} options={{ headerShown: false }} />
+					<Stack.Screen name="Selecionar Rota" component={SelecionarRota} options={{ headerShown: false }} />
 				</Stack.Navigator>
 			</NavigationContainer>
 		</SafeAreaView>
