@@ -1,17 +1,16 @@
-import Icon from "@expo/vector-icons/MaterialCommunityIcons";
+import { Button, Stack, Text } from "@react-native-material/core";
 import React from "react";
 import { StyleSheet, View } from "react-native";
-import { Button, Stack, Text } from "@react-native-material/core";
 
 export default function SelecionarRota(vai: any) {
 
     return (
         <View
-        style={styles.rota}>
+            style={styles.rota}>
             <Stack
                 style={styles.tackstack}>
                 <View
-                style={styles.linha}>
+                    style={styles.linha}>
                     <Text
                         style={styles.lbl}>
                         Rota UTFPR
@@ -25,7 +24,7 @@ export default function SelecionarRota(vai: any) {
                 </View>
 
                 <View
-                style={styles.linha}>
+                    style={styles.linha}>
                     <Text
                         style={styles.lbl}>
                         Rota Entre Bairros 1
@@ -39,7 +38,7 @@ export default function SelecionarRota(vai: any) {
                 </View>
 
                 <View
-                style={styles.linha}>
+                    style={styles.linha}>
                     <Text
                         style={styles.lbl}>
                         Rota Entre Bairros 2
@@ -69,7 +68,6 @@ const styles = StyleSheet.create({
     },
     tackstack: {
         width: "95%",
-        //alignItems: "center",
     },
     linha: {
         flexDirection: "row",
