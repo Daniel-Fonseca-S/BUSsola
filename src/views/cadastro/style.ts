@@ -25,27 +25,29 @@ const syles = StyleSheet.create({
 		color: "#8D28FF",
 		fontWeight: "bold",
 		margin: 10,
-		marginTop: 40,
-	},
-	text: {
-		fontSize: 25,
-		color: "#B7B7B7",
+		marginTop: 50,
 	},
 	button: {
 		width: "80%",
 		height: 50,
 		justifyContent: "center",
-		marginBottom: 45,
+		marginBottom: 15,
 		marginTop: 10,
 	},
 	textButton: {
-		marginBottom: 5,
-		marginTop: 10,
+		marginBottom: 25,
+		fontWeight: "bold",
+	},
+	buttonTitle: {
+		fontSize: 20,
+		fontWeight: "bold",
 	},
 	image: {
 		width: 200,
 		height: 200,
 		borderRadius: 100,
+		marginBottom: 5,
+		marginTop: 15,
 	}
 });
 
