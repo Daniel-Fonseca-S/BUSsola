@@ -1,10 +1,14 @@
 import { Button, Text } from "@react-native-material/core";
 import { Image, StyleSheet, View } from "react-native";
+import Menu from "src/components/menu";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function Rota({ navigation }: any) {
 	return (
 		<View style={styles.container}>
+			
+			<Menu/>
+
 			<View style={{ alignItems: "center" }}>
 				<Text style={styles.titulo}>
 					Rota UTFPR - DV
@@ -36,7 +40,7 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		justifyContent: "space-between",
 		backgroundColor: "#000",
-		paddingVertical: 50,
+		paddingBottom: 50,
 	},
 	meio: {
 		width: "100%",
@@ -52,6 +56,7 @@ const styles = StyleSheet.create({
 	botao: {
 		width: "80%",
 		padding: 10,
+		marginTop: 10,
 	},
 	titulo: {
 		fontSize: 30,

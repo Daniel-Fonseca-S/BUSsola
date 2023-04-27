@@ -1,8 +1,7 @@
-import Icon from "@expo/vector-icons/MaterialCommunityIcons";
-import { Button, IconButton, Stack, Text, TextInput } from "@react-native-material/core";
 import React, { useState } from "react";
-import { Image, KeyboardAvoidingView, StyleSheet } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import Icon from "@expo/vector-icons/MaterialCommunityIcons";
+import { Image, KeyboardAvoidingView, StyleSheet, TouchableOpacity } from "react-native";
+import { Button, IconButton, Stack, Text, TextInput } from "@react-native-material/core";
 
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -51,13 +50,13 @@ export default function Login({ navigation }: any) {
 					)}
 				/>
 
-				<TouchableOpacity onPress={() => navigation.navigate("recuperar-senha")}>
+				<TouchableOpacity onPress={() => navigation.navigate("Recuperar Senha")}>
 					<Text style={styles.texto}>
 						Esqueceu sua senha?
 					</Text>
 				</TouchableOpacity>
 
-				<TouchableOpacity onPress={() => navigation.navigate("cadastro")}>
+				<TouchableOpacity onPress={() => navigation.navigate("Cadastro")}>
 					<Text style={styles.texto}>
 						Não tem uma conta?
 					</Text>
@@ -68,7 +67,7 @@ export default function Login({ navigation }: any) {
 				title={"Login"}
 				style={styles.botao}
 				disabled={email.length === 0 || senha.length === 0}
-				onPress={() => { navigation.navigate("home"); }}
+				onPress={() => { navigation.navigate("Home"); }}
 				trailing={props => <Icon name="login" {...props} />}
 			/>
 		</KeyboardAvoidingView>
@@ -81,7 +80,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		alignItems: "center",
 		backgroundColor: "#000",
-		paddingVertical: 50,
+		paddingTop: 50
 	},
 	meio: {
 		width: "100%",
