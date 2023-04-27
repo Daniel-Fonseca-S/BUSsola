@@ -18,7 +18,6 @@ export default function App() {
 				<Drawer.Screen name="login" component={Login} />
 				<Drawer.Screen name="recuperar-senha" component={RecuperarSenha} />
 				<Drawer.Screen name="nova-senha" component={NovaSenha} />
-				<Drawer.Screen name="select-rota" component={SelecionarRota} />
 			</Drawer.Navigator>
 			{/* <Stack.Navigator initialRouteName='Menu'>
 				<Stack.Screen name="Menu" component={Menu} options={{ headerShown: false, statusBarHidden: true }} />
