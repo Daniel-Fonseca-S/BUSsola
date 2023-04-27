@@ -1,28 +1,35 @@
-import "react-native-gesture-handler";
 import React from "react";
-import { NavigationContainer } from "@react-navigation/native";
-import Menu from "./src/components/menu";
-import { createDrawerNavigator } from "@react-navigation/drawer";
-import Login from "./src/views/login";
-import RecuperarSenha from "./src/views/recuperar-senha";
-import NovaSenha from "./src/views/nova-senha";
-import SelecionarRota from "./src/views/select-rota";
+import Rota from "src/views/main";
+import Login from "src/views/login";
+import Cadastro from "src/views/cadastro";
+import NovaSenha from "src/views/nova-senha";
+import RecuperarSenha from "src/views/recuperar-senha";
+import { SafeAreaView, StyleSheet } from "react-native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { NavigationContainer, createNavigationContainerRef } from "@react-navigation/native";
+
+export const navigationRef = createNavigationContainerRef();
 
 export default function App() {
-	const Drawer = createDrawerNavigator();
+	const Stack = createNativeStackNavigator();
 
 	return (
-		<NavigationContainer>
-			<Drawer.Navigator initialRouteName="login">
-				{/* <Drawer.Screen name="Menu" component={Menu} /> */}
-				<Drawer.Screen name="login" component={Login} />
-				<Drawer.Screen name="recuperar-senha" component={RecuperarSenha} />
-				<Drawer.Screen name="nova-senha" component={NovaSenha} />
-			</Drawer.Navigator>
-			{/* <Stack.Navigator initialRouteName='Menu'>
-				<Stack.Screen name="Menu" component={Menu} options={{ headerShown: false, statusBarHidden: true }} />
-				<Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
-			</Stack.Navigator> */}
-		</NavigationContainer>
+		<SafeAreaView style={styles.container}>
+			<NavigationContainer ref={navigationRef}>
+				<Stack.Navigator>
+					<Stack.Screen name="Log Out" component={Login} options={{ headerShown: false }} />
+					<Stack.Screen name="Nova Senha" component={NovaSenha} options={{ headerShown: false }} />
+					<Stack.Screen name="Recuperar Senha" component={RecuperarSenha} options={{ headerShown: false }} />
+					<Stack.Screen name="Home" component={Rota} options={{ headerShown: false }} />
+					<Stack.Screen name="Cadastro" component={Cadastro} options={{ headerShown: false }} />
+				</Stack.Navigator>
+			</NavigationContainer>
+		</SafeAreaView>
 	);
 }
+
+const styles = StyleSheet.create({
+	container: {
+		flex: 1
+	}
+});
