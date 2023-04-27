@@ -1,10 +1,8 @@
 import { Button, Text } from "@react-native-material/core";
 import { Image, StyleSheet, View } from "react-native";
 
-// eslint-disable-next-line @typescript-eslint/no-empty-function
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function Rota({ navigation }: any) {
-
-
 	return (
 		<View style={styles.container}>
 			<View style={{ alignItems: "center" }}>
