@@ -69,6 +69,7 @@ export default function Cadastro({ navigation }: any) {
 				<Button 
 					style={styles.button} 
 					title="Cadastrar"
+					contentContainerStyle={{height: 50}}
 					onPress={() => {navigation.navigate("Log Out"); }}/>
 				<Text style={{fontSize: 20, color: "#B7B7B7"}}>Já tem uma conta?</Text>
 				<Button 
