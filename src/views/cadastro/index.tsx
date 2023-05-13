@@ -18,6 +18,7 @@ export default function Cadastro({ navigation }: any) {
 		// No permissions request is necessary for launching the image library
 		const result = await ImagePicker.launchImageLibraryAsync({
 			mediaTypes: ImagePicker.MediaTypeOptions.Images,
+			base64: true,
 			allowsEditing: true,
 			aspect: [4, 3],
 			quality: 1,
