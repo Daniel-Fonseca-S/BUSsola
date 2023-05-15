@@ -1,8 +1,9 @@
 import React from "react";
-import { Alert, Image, Text, View } from "react-native";
+import { Image, Text, View } from "react-native";
 import { IconButton, TextInput, Button } from "@react-native-material/core";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import style from "./style";
+import * as ImagePicker from "expo-image-picker";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function Cadastro({ navigation }: any) {
@@ -11,6 +12,24 @@ export default function Cadastro({ navigation }: any) {
 	const [senha, setSenha] = React.useState("");
 	const [senhaVisivel, setSenhaVisivel] = React.useState(true);
 	const styles = style;
+	const [image, setImage] = React.useState("");
+	
+	const pickImage = async () => {
+		// No permissions request is necessary for launching the image library
+		const result = await ImagePicker.launchImageLibraryAsync({
+			mediaTypes: ImagePicker.MediaTypeOptions.Images,
+			base64: true,
+			allowsEditing: true,
+			aspect: [4, 3],
+			quality: 1,
+		});
+
+		console.log(result);
+
+		if (!result.canceled) {
+			setImage(result.assets[0].uri);
+		}
+	};
 
 	return (
 		<View style={styles.container}>
@@ -20,7 +39,7 @@ export default function Cadastro({ navigation }: any) {
 			</View>
 			<View style={styles.content}>
 				<View style={{marginBottom: 50, alignItems:"center"}}>
-					<Image style={styles.image} source={require("../../../assets/stock-image-avatar.jpg")}></Image>
+					<Image style={styles.image} source={(image == "") ? require("../../../assets/stock-image-avatar.jpg") : {uri : image}}></Image>
 					<Button 
 						style={styles.textButton} 
 						title="Upload da foto de perfil"
@@ -28,7 +47,7 @@ export default function Cadastro({ navigation }: any) {
 						titleStyle={styles.buttonTitle}
 						uppercase={false}
 						color="#B7B7B7"
-						onPress={() => Alert.alert("É nada kkkkk")}/>
+						onPress={pickImage}/>
 				</View>
 				<TextInput
 					style={styles.textInput}

@@ -26,6 +26,7 @@
     "react-native-screens": "~3.20.0",
     "react-native-select-dropdown": "^3.3.3",
     "typescript": "^4.9.4",
+    "expo-image-picker": "~14.1.1",
     "react-native-web": "~0.18.10",
     "react-dom": "18.2.0"
   },
