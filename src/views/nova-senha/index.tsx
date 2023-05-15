@@ -54,7 +54,7 @@ export default function NovaSenha({ navigation }: any) {
 				title={"Salvar"}
 				style={styles.botao}
 				disabled={senha !== confirmarSenha || senha.length < 6 || confirmarSenha.length < 6}
-				onPress={() => { navigation.navigate("home"); }}
+				onPress={() => { navigation.navigate("Home"); }}
 				trailing={props => <Icon name="login" {...props} />}
 			/>
 		</KeyboardAvoidingView>

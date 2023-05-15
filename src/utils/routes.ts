@@ -12,5 +12,9 @@ export const routes: Screen[] = [
 	{
 		id: 3,
 		name: "Log Out"
+	},
+	{
+		id: 4,
+		name: "Rotas"
 	}
 ];
