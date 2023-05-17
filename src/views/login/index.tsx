@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { Image, KeyboardAvoidingView, StyleSheet, TouchableOpacity } from "react-native";
 import { Button, IconButton, Stack, Text, TextInput } from "@react-native-material/core";
+import * as Location from "expo-location";
+
 
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

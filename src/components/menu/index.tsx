@@ -2,6 +2,7 @@ import { useState } from "react";
 import { routes } from "../../utils/routes";
 import { navigationPop, navigationPush } from "src/utils/navigationFun";
 import { Image, Modal, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import React from "react";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function Menu() {

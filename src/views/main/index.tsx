@@ -1,15 +1,64 @@
 import { Button, Text } from "@react-native-material/core";
-import { Image, StyleSheet, View } from "react-native";
+import React, { useState } from "react";
+import { useEffect } from "react";
+import { Alert, Image, StyleSheet, View } from "react-native";
 import Menu from "src/components/menu";
+import * as Location from "expo-location";
+import { LocationObject } from "expo-location";
+import MapView, {
+	Callout,
+	Marker,
+	PROVIDER_GOOGLE,
+	Region,
+} from "react-native-maps";
+import Ponto from "./models/ponto";
+
+const initialRegion = {
+	latitude: -25.443195,
+	longitude: -49.280977,
+	latitudeDelta: 0.0922,
+	longitudeDelta: 0.0421,
+};
+
+const pontos: Ponto[] = [
+
+];
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function Rota({ navigation }: any) {
+	const [location, setLocation] = useState<LocationObject | null>(null);
+	const [errorMsg, setErrorMsg] = useState<string | null>(null);
+	const [region, setRegion] = useState<Region>();
+
+	const getCurrentPosition = async () => {
+		const { status } = await Location.requestForegroundPermissionsAsync();
+
+		if (status !== "granted")
+			Alert.alert("Ops!", "Permissão de acesso a localização negada.");
+
+		const {
+			coords: { latitude, longitude },
+		} = await Location.getCurrentPositionAsync();
+
+		setRegion({ latitude, longitude, latitudeDelta: 100, longitudeDelta: 100 });
+	};
+
+	useEffect(() => {
+		getCurrentPosition();
+	}, []);
+
+	let text = "Waiting..";
+	if (errorMsg) {
+		text = errorMsg;
+	} else if (location) {
+		text = JSON.stringify(location);
+	}
+
 	return (
 		<View style={styles.container}>
-			
-			<Menu/>
+			<Menu />
 
-			<View style={{ alignItems: "center" }}>
+			<View style={styles.cabecalho}>
 				<Text style={styles.titulo}>
 					Rota UTFPR - DV
 				</Text>
@@ -19,10 +68,37 @@ export default function Rota({ navigation }: any) {
 				</Text>
 			</View>
 
-			<Image
-				source={require("../../../assets/mapa-temporario.jpg")}
-				style={styles.imagem}
-			/>
+			<MapView
+				provider={PROVIDER_GOOGLE}
+				style={styles.mapa}
+				region={region}
+				initialRegion={initialRegion}
+				key={region?.latitude?.toString()}
+				showsUserLocation={true}
+				showsMyLocationButton={true}
+				showsCompass={true}
+				showsScale={true}
+				showsBuildings={true}
+				zoomEnabled={true}
+			>
+				{pontos.map((ponto) => (
+					<Marker
+						key={ponto.uid}
+						coordinate={{
+							latitude: ponto.latitude,
+							longitude: ponto.longitude,
+						}}
+						title={ponto.nome}
+						description={ponto.descricao}
+					>
+						<Callout tooltip>
+							<View>
+
+							</View>
+						</Callout>
+					</Marker>
+				))}
+			</MapView>
 
 			<Button
 				title={"Alterar Rota"}
@@ -56,7 +132,8 @@ const styles = StyleSheet.create({
 	botao: {
 		width: "80%",
 		padding: 10,
-		marginTop: 10,
+		position: "absolute",
+		bottom: 30,
 	},
 	titulo: {
 		fontSize: 30,
@@ -64,11 +141,18 @@ const styles = StyleSheet.create({
 		fontWeight: "bold",
 	},
 	texto: {
-		fontSize: 20,
+		fontSize: 17,
 		color: "#B7B7B7",
 	},
-	imagem: {
-		height: "75%",
+	mapa: {
+		height: "100%",
+		width: "100%",
 		resizeMode: "contain",
+	},
+	cabecalho: {
+		marginHorizontal: 7,
+		zIndex: 99,
+		padding: 10,
+		borderRadius: 10,
 	}
 });
