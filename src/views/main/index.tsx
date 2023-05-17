@@ -1,16 +1,15 @@
 import { Button, Text } from "@react-native-material/core";
-import React, { useState } from "react";
-import { useEffect } from "react";
-import { Alert, Image, StyleSheet, View } from "react-native";
-import Menu from "src/components/menu";
 import * as Location from "expo-location";
 import { LocationObject } from "expo-location";
+import React, { useEffect, useState } from "react";
+import { Alert, StyleSheet, View } from "react-native";
 import MapView, {
 	Callout,
 	Marker,
 	PROVIDER_GOOGLE,
 	Region,
 } from "react-native-maps";
+import Menu from "src/components/menu";
 import Ponto from "./models/ponto";
 
 const initialRegion = {
