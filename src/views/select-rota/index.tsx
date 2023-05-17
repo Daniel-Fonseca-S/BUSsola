@@ -3,6 +3,7 @@ import React from "react";
 import { StyleSheet, View } from "react-native";
 import Menu from "src/components/menu";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function SelecionarRota(vai: any) {
 
 	return (
@@ -42,7 +43,7 @@ export default function SelecionarRota(vai: any) {
 					style={styles.linha}>
 					<Text
 						style={styles.lbl}>
-						Rota Entre Bairros 2
+                        Rota Entre Bairros 2
 					</Text>
 					<Button
 						title={"IR"}
