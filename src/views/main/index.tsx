@@ -25,7 +25,9 @@ const pontos: Ponto[] = [
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function Rota({ navigation }: any) {
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const [location, setLocation] = useState<LocationObject | null>(null);
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const [errorMsg, setErrorMsg] = useState<string | null>(null);
 	const [region, setRegion] = useState<Region>();
 
@@ -50,6 +52,7 @@ export default function Rota({ navigation }: any) {
 	if (errorMsg) {
 		text = errorMsg;
 	} else if (location) {
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		text = JSON.stringify(location);
 	}
 

@@ -1,8 +1,7 @@
-import React, { useState } from "react";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
-import { Image, KeyboardAvoidingView, StyleSheet, TouchableOpacity } from "react-native";
 import { Button, IconButton, Stack, Text, TextInput } from "@react-native-material/core";
-import * as Location from "expo-location";
+import React, { useState } from "react";
+import { Image, KeyboardAvoidingView, StyleSheet, TouchableOpacity } from "react-native";
 
 
 
