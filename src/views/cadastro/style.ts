@@ -1,13 +1,13 @@
 import { StyleSheet } from "react-native";
 
-const syles = StyleSheet.create({
+const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		backgroundColor: "#1E1E1E",
 		alignItems: "center",
 		justifyContent: "space-between",
 		width: "100%",
-		paddingTop: 20,
+		paddingTop: 35,
 	},
 	content: {
 		backgroundColor: "#1E1E1E",
@@ -18,14 +18,11 @@ const syles = StyleSheet.create({
 	textInput: {
 		width: "80%",
 		marginBottom: 15,
-		marginTop: 15,
 	},
 	title: {
 		fontSize: 35,
 		color: "#8D28FF",
 		fontWeight: "bold",
-		margin: 10,
-		marginTop: 50,
 	},
 	button: {
 		width: "80%",
@@ -35,7 +32,7 @@ const syles = StyleSheet.create({
 		marginTop: 10,
 	},
 	textButton: {
-		marginBottom: 25,
+		marginBottom: 15,
 		fontWeight: "bold",
 	},
 	buttonTitle: {
@@ -43,12 +40,12 @@ const syles = StyleSheet.create({
 		fontWeight: "bold",
 	},
 	image: {
-		width: 200,
-		height: 200,
+		width: 180,
+		height: 180,
 		borderRadius: 100,
 		marginBottom: 5,
 		marginTop: 15,
 	}
 });
 
-export default syles;
+export default styles;
