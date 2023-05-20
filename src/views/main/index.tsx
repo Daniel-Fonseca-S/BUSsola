@@ -82,6 +82,7 @@ export default function Rota({ navigation }: any) {
 				showsScale={true}
 				showsBuildings={true}
 				zoomEnabled={true}
+				onPress={() => {navigation.navigate("Parada de Embarque");}}
 			>
 				{pontos.map((ponto) => (
 					<Marker

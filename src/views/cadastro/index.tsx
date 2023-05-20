@@ -38,7 +38,7 @@ export default function Cadastro({ navigation }: any) {
 				<Text style={{fontSize: 25, color: "#B7B7B7"}}>Crie uma conta para continuar</Text>
 			</View>
 			<View style={styles.content}>
-				<View style={{marginBottom: 50, alignItems:"center"}}>
+				<View style={{marginBottom: 30, alignItems:"center"}}>
 					<Image style={styles.image} source={(image == "") ? require("../../../assets/stock-image-avatar.jpg") : {uri : image}}></Image>
 					<Button 
 						style={styles.textButton} 
