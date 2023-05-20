@@ -66,7 +66,7 @@ export default function Cadastro({ navigation }: any) {
 				<Text style={{ fontSize: 25, color: "#B7B7B7" }}>Crie uma conta para continuar</Text>
 			</View>
 			<View style={styles.content}>
-				<View style={{ marginBottom: 50, alignItems: "center" }}>
+				<View style={{ marginBottom: 30, alignItems: "center" }}>
 					<TouchableOpacity onPress={pickImage}>
 						<Image
 							style={styles.image}
@@ -116,9 +116,9 @@ export default function Cadastro({ navigation }: any) {
 					secureTextEntry={senhaVisivel}
 				/>
 			</View>
-			<View style={styles.content}>
-				<Button
-					style={styles.button}
+			<View style={styles.bottomContent}>
+				<Button 
+					style={styles.button} 
 					title="Cadastrar"
 					contentContainerStyle={{ height: 50 }}
 					onPress={cadastro}

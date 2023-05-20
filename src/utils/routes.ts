@@ -16,5 +16,9 @@ export const routes: Screen[] = [
 	{
 		id: 4,
 		name: "Rotas"
+	},
+	{
+		id: 5,
+		name: "Parada de Embarque"
 	}
 ];
