@@ -108,9 +108,7 @@ export default function Cadastro({ navigation }: any) {
 						<IconButton
 							icon={props => !senhaVisivel ? <Icon name="eye-off" {...props} /> : <Icon name="eye" {...props} />}
 							{...props}
-							onPress={() => {
-								setSenhaVisivel(!senhaVisivel);
-							}}
+							onPress={() => setSenhaVisivel(!senhaVisivel)}
 						/>
 					)}
 					value={senha}
@@ -134,9 +132,8 @@ export default function Cadastro({ navigation }: any) {
 					titleStyle={styles.buttonTitle}
 					uppercase={false}
 					color="#B7B7B7"
-					onPress={() => {
-						navigation.navigate("Log Out");
-					}} />
+					onPress={() => navigation.navigate("Log Out")}
+				/>
 			</View>
 		</View>
 	);
