@@ -48,7 +48,7 @@ export default function Menu() {
 
 const styles = StyleSheet.create({
 	container: {
-		backgroundColor: "#000000aa",
+		backgroundColor: "#1E1E1E",
 		alignItems: "center"
 	},
 	navbar: {

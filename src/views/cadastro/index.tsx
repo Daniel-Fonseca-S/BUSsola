@@ -84,7 +84,7 @@ export default function Cadastro({ navigation }: any) {
 					secureTextEntry={senhaVisivel}
 				/>
 			</View>
-			<View style={styles.content}>
+			<View style={styles.bottomContent}>
 				<Button 
 					style={styles.button} 
 					title="Cadastrar"

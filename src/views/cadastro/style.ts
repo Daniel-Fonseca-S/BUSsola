@@ -5,7 +5,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		backgroundColor: "#1E1E1E",
 		alignItems: "center",
-		justifyContent: "space-between",
+		justifyContent: "flex-start",
 		width: "100%",
 		paddingTop: 35,
 	},
@@ -15,6 +15,13 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 		width: "100%",
 	},
+	bottomContent: {
+		backgroundColor: "#1E1E1E",
+		alignItems: "center",
+		width: "100%",
+		flex: 1, 
+		justifyContent: "flex-end",
+	},
 	textInput: {
 		width: "80%",
 		marginBottom: 15,
@@ -23,6 +30,7 @@ const styles = StyleSheet.create({
 		fontSize: 35,
 		color: "#8D28FF",
 		fontWeight: "bold",
+		paddingTop: 15,
 	},
 	button: {
 		width: "80%",
