@@ -1,68 +1,110 @@
-import { Button, Text } from "@react-native-material/core";
-import React from "react";
+import React, { useEffect } from "react";
 import { StyleSheet, View } from "react-native";
-import SelectDropdown from "react-native-select-dropdown";
+import Cidade from "src/model/cidade";
+import Estado from "src/model/estado";
 import Menu from "src/components/menu";
-
-const estados = [
-	"São Paulo",
-	"Rio de Janeiro",
-	"Paraná",
-	"Maranhão"
-];
-
-const sp = [
-	"São Paulo",
-	"São José dos Campos",
-	"Diadema",
-	"Osasco",
-];
-
-const rj = [
-	"Rio de Janeiro",
-	"Niterói",
-	"Duque de Caxias",
-	"Nova Iguaçu",
-];
-
-const pr = [
-	"Curitiba",
-	"Dois Vizinhos",
-	"Maringá",
-	"Francisco Beltrão"
-];
-
-const ma = [
-	"São Luís",
-	"Imperatriz",
-	"Balsas",
-	"Caxias"
-];
+import useUsuario from "src/utils/hooks/useUsuario";
+import SelectDropdown from "react-native-select-dropdown";
+import { Button, Text } from "@react-native-material/core";
+import { child, get, getDatabase, ref, update } from "firebase/database";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function SelecionarCidade(vai: any) {
-	const [estado, setEstado] = React.useState("São Paulo" as string);
-	const [lista, setLista] = React.useState(sp as string[]);
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	const [cidade, setCidade] = React.useState("São Paulo" as string);
-	const dropdownRef = React.useRef<SelectDropdown>(null);
+	const [estados, setEstados] = React.useState<Estado[]>([]);
+	const [estado, setEstado] = React.useState<Estado>();
+	const [cidades, setCidades] = React.useState<Cidade[]>([]);
+	const [cidade, setCidade] = React.useState<Cidade>();
+	const usuario = useUsuario();
 
-	React.useEffect(() => {
-		switch (estado) {
-		case "São Paulo":
-			setLista(sp);
-			break;
-		case "Rio de Janeiro":
-			setLista(rj);
-			break;
-		case "Paraná":
-			setLista(pr);
-			break;
-		case "Maranhão":
-			setLista(ma);
-			break;
+	const dropdownRef = React.useRef<SelectDropdown>(null);
+	const database = getDatabase();
+
+	const idUsuario: string = usuario.uid;
+
+	useEffect(() => {
+		loadEstados();
+		if (estado !== undefined) {
+			loadCidades(estado);
 		}
+
+		verificarCidadeUsuario(idUsuario);
 	}, [estado]);
+
+	function setCidadeUsuario() {
+		update(ref(database, "usuario/" + idUsuario), { reside: cidade?.nome + " " + estado?.sigla }).then(() => {
+			console.log("Cidade do usuário atualizada");
+			vai.navigation.navigate("Rotas");
+		}).catch((error) => {
+			console.error(error);
+		}
+		);
+	}
+
+	async function loadEstados() {
+		get(child(ref(database), "estado")).then((snapshot) => {
+			const newEstados: Estado[] = [];
+			if (snapshot.exists()) {
+				snapshot.forEach((childSnapshot) => {
+					const childKey = childSnapshot.key;
+					const childData: Estado | undefined = childSnapshot.key ? { id: childKey, nome: childSnapshot.val().nome, sigla: childSnapshot.val().sigla } as Estado : undefined;
+					if (childData !== undefined) {
+						newEstados.push(childData);
+					}
+				});
+			} else {
+				console.log("Estados não encontrados");
+			}
+			setEstados(newEstados);
+		}).catch((error) => {
+			console.error(error);
+		});
+	}
+
+	async function loadCidades(estado: Estado) {
+		get(child(ref(database), "estado/" + estado.id + "/cidade")).then((snapshot) => {
+			const newCidades: Cidade[] = [];
+			if (snapshot.exists()) {
+				snapshot.forEach((childSnapshot) => {
+					const childKey = childSnapshot.key;
+					const childData: Cidade | undefined = childSnapshot.key ? { id: childKey, nome: childSnapshot.val().nome } as Cidade : undefined;
+					if (childData !== undefined) {
+						newCidades.push(childData);
+					}
+				});
+			} else {
+				console.log("Cidades não encontradas");
+			}
+			setCidades(newCidades);
+		}).catch((error) => {
+			console.error(error);
+		});
+	}
+
+	async function verificarCidadeUsuario(idUsuario: string) {
+		get(child(ref(database), "usuario/" + idUsuario)).then((snapshot) => {
+			if (snapshot.exists()) {
+				const cidadeUsuario = snapshot.val().reside;
+				if (cidadeUsuario !== undefined) {
+					const cidadeUsuarioArray = cidadeUsuario.split(" ");
+					const cidadeUsuarioNome = cidadeUsuarioArray[0];
+					const estadoUsuarioSigla = cidadeUsuarioArray[1];
+					const estadoUsuario = estados.find((estado) => { return estado.sigla === estadoUsuarioSigla; });
+					if (estadoUsuario !== undefined) {
+						const cidadeUsuarioObj = cidades.find((cidade) => { return cidade.nome === cidadeUsuarioNome; });
+						if (cidadeUsuarioObj !== undefined) {
+							setEstado(estadoUsuario);
+							setCidade(cidadeUsuarioObj);
+						}
+					}
+				}
+			} else {
+				console.log("Usuário não encontrado");
+			}
+		}).catch((error) => {
+			console.error(error);
+		});
+	}
+
 	return (
 		<View
 			style={styles.visao}>
@@ -74,14 +116,16 @@ export default function SelecionarCidade(vai: any) {
 				<View>
 					<Text style={styles.lbl}>ESTADO</Text>
 					<SelectDropdown
-						defaultButtonText="Selecione um estado"
+						key={Math.random()}
+						defaultButtonText={estado?.nome ?? "Selecione um estado"}
 						buttonStyle={styles.btn1}
 						buttonTextStyle={styles.btntxt}
 						dropdownStyle={styles.selector}
 						rowTextStyle={styles.row}
-						data={estados}
+						data={estados.map((estado) => { return `${estado.nome} (${estado.sigla})`; }) ?? []}
 						onSelect={(selectedItem) => {
-							setEstado(selectedItem);
+							setEstado(estados.find((estado) => { return `${estado.nome} (${estado.sigla})` === selectedItem; }));
+							setCidade(undefined);
 							dropdownRef.current?.reset();
 						}}
 						buttonTextAfterSelection={(selectedItem) => {
@@ -96,15 +140,17 @@ export default function SelecionarCidade(vai: any) {
 				<View>
 					<Text style={styles.lbl}>CIDADE</Text>
 					<SelectDropdown
-						defaultButtonText="Selecione uma cidade"
+						key={Math.random()}
+						defaultButtonText={cidade?.nome ?? "Selecione uma cidade"}
 						buttonStyle={styles.btn1}
 						buttonTextStyle={styles.btntxt}
 						dropdownStyle={styles.selector}
 						rowTextStyle={styles.row}
-						data={lista}
+						data={cidades.map((cidade) => { return cidade.nome; }) ?? []}
 						ref={dropdownRef}
 						onSelect={(selectedItem) => {
-							setCidade(selectedItem);
+							setCidade(cidades.find((cidade) => { return cidade.nome === selectedItem; }));
+							dropdownRef.current?.reset();
 						}}
 						buttonTextAfterSelection={(selectedItem) => {
 							return selectedItem;
@@ -112,6 +158,7 @@ export default function SelecionarCidade(vai: any) {
 						rowTextForSelection={(item) => {
 							return item;
 						}}
+						disabled={estado === undefined}
 					/>
 				</View>
 			</View>
@@ -119,7 +166,8 @@ export default function SelecionarCidade(vai: any) {
 			<Button
 				title="Salvar Cidade"
 				style={styles.btn2}
-				onPress={() => { vai.navigate("Rotas"); }}
+				onPress={() => setCidadeUsuario()}
+				disabled={cidade === undefined || idUsuario === ""}
 			/>
 
 		</View>
