@@ -48,8 +48,8 @@ const styles = StyleSheet.create({
 		fontWeight: "bold",
 	},
 	image: {
-		width: 180,
-		height: 180,
+		width: 128,
+		height: 128,
 		borderRadius: 100,
 		marginBottom: 5,
 		marginTop: 15,
