@@ -28,16 +28,16 @@ export default function SelecionarCidade(vai: any) {
 		}
 
 		verificarCidadeUsuario(idUsuario);
-		console.log(
-			"email: "+ usuario.email,
-			"\nuid: "+ usuario.uid,
-		);
 	}, [estado]);
 
-	function setCidadeUsuario(cidade: string) {
-		update(ref(database, "usuario/" + idUsuario), {
-			reside: cidade + " " + estado?.sigla
-		});
+	function setCidadeUsuario() {
+		update(ref(database, "usuario/" + idUsuario), { reside: cidade?.nome + " " + estado?.sigla }).then(() => {
+			console.log("Cidade do usuário atualizada");
+			vai.navigation.navigate("Rotas");
+		}).catch((error) => {
+			console.error(error);
+		}
+		);
 	}
 
 	async function loadEstados() {
@@ -166,7 +166,7 @@ export default function SelecionarCidade(vai: any) {
 			<Button
 				title="Salvar Cidade"
 				style={styles.btn2}
-				onPress={() => { setCidadeUsuario(cidade?.nome ?? ""); vai.navigate("Rotas"); }}
+				onPress={() => setCidadeUsuario()}
 				disabled={cidade === undefined || idUsuario === ""}
 			/>
 
