@@ -1,7 +1,8 @@
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
-import { Button, IconButton, Stack, Text, TextInput } from "@react-native-material/core";
-import React, { useState } from "react";
-import { Image, KeyboardAvoidingView, StyleSheet, TouchableOpacity } from "react-native";
+import { ActivityIndicator, Button, IconButton, Stack, Text, TextInput } from "@react-native-material/core";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import React, { useEffect, useState } from "react";
+import { Alert, Image, KeyboardAvoidingView, StyleSheet, TouchableOpacity, View } from "react-native";
 
 
 
@@ -9,10 +10,31 @@ import { Image, KeyboardAvoidingView, StyleSheet, TouchableOpacity } from "react
 export default function Login({ navigation }: any) {
 	const [email, setEmail] = useState("");
 	const [senha, setSenha] = useState("");
-	const [senhaVisivel, setSenhaVisivel] = useState(false); // [true, false]
+	const [senhaVisivel, setSenhaVisivel] = useState(false);
+	const [carregando, setCarregando] = useState(false);
 
 	// eslint-disable-next-line @typescript-eslint/no-var-requires
 	const logo = require("../../../assets/logo.png");
+
+	const login = () => {
+		const auth = getAuth();
+		setCarregando(true);
+		signInWithEmailAndPassword(auth, email, senha)
+			.then(() => {
+				setCarregando(false);
+				navigation.navigate("Home");
+			})
+			.catch((error) => {
+				setCarregando(false);
+				Alert.alert("Erro", error.message, [{ text: "OK" }], { cancelable: false });
+			});
+	};
+
+	useEffect(() => {
+		const auth = getAuth();
+		if (auth.currentUser) auth.signOut();
+	});
+
 
 	return (
 		<KeyboardAvoidingView
@@ -51,6 +73,19 @@ export default function Login({ navigation }: any) {
 					)}
 				/>
 
+				<View
+					style={{
+						position: "absolute",
+						top: "50%",
+						left: "50%",
+						marginTop: -25,
+						marginLeft: -25,
+						opacity: carregando ? 1 : 0
+					}}
+				>
+					<ActivityIndicator size={50} animating={carregando} />
+				</View>
+
 				<TouchableOpacity onPress={() => navigation.navigate("Recuperar Senha")}>
 					<Text style={styles.texto}>
 						Esqueceu sua senha?
@@ -68,7 +103,7 @@ export default function Login({ navigation }: any) {
 				title={"Login"}
 				style={styles.botao}
 				disabled={email.length === 0 || senha.length === 0}
-				onPress={() => { navigation.navigate("Home"); }}
+				onPress={login}
 				trailing={props => <Icon name="login" {...props} />}
 			/>
 		</KeyboardAvoidingView>
