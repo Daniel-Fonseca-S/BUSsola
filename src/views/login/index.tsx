@@ -31,7 +31,6 @@ export default function Login({ navigation }: any) {
 				navigation.navigate("Home");
 				if (auth.currentUser)
 					get(child(ref(database), "usuario/" + auth.currentUser.uid)).then((snapshot) => {
-						console.log(snapshot.val());
 						if (snapshot.exists()) setUsuario({ ...snapshot.val(), uid: snapshot.key } as Usuario);
 						else console.log("No data available");
 					})
