@@ -1,8 +1,6 @@
-import { useRecoilState } from "recoil";
-import { usuarioState } from "../atoms/usuario-atom";
+import { useSetRecoilState } from "recoil";
+import { usuarioState } from "../atom";
 
-export const setUsuario = () => {
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	const [usuario, setUsuario] = useRecoilState(usuarioState);
-	return setUsuario;
-};
+export default function setUsuario() {
+	return useSetRecoilState(usuarioState);
+}

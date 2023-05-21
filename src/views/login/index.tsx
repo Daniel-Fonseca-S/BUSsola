@@ -1,7 +1,7 @@
-import Icon from "@expo/vector-icons/MaterialCommunityIcons";
-import { ActivityIndicator, Button, IconButton, Stack, Text, TextInput } from "@react-native-material/core";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import React, { useEffect, useState } from "react";
+import Icon from "@expo/vector-icons/MaterialCommunityIcons";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { ActivityIndicator, Button, IconButton, Stack, Text, TextInput } from "@react-native-material/core";
 import { Alert, Image, KeyboardAvoidingView, StyleSheet, TouchableOpacity, View } from "react-native";
 
 

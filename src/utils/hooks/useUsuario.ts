@@ -1,7 +1,6 @@
-import { useRecoilState } from "recoil";
-import { usuarioState } from "../atoms/usuario-atom";
+import { useRecoilValue } from "recoil";
+import { usuarioState } from "../atom";
 
-export const useUsuario = () => {
-	const [usuario] = useRecoilState(usuarioState);
-	return usuario;
-};
+export default function useUsuario() {
+	return useRecoilValue(usuarioState);
+}
