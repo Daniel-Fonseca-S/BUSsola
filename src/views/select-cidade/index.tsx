@@ -19,7 +19,7 @@ export default function SelecionarCidade(vai: any) {
 	const dropdownRef = React.useRef<SelectDropdown>(null);
 	const database = getDatabase();
 
-	const idUsuario: string = usuario.id;
+	const idUsuario: string = usuario.uid;
 
 	useEffect(() => {
 		loadEstados();
@@ -28,6 +28,10 @@ export default function SelecionarCidade(vai: any) {
 		}
 
 		verificarCidadeUsuario(idUsuario);
+		console.log(
+			"email: "+ usuario.email,
+			"\nuid: "+ usuario.uid,
+		);
 	}, [estado]);
 
 	function setCidadeUsuario(cidade: string) {

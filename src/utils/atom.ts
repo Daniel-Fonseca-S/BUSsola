@@ -4,10 +4,9 @@ import Usuario from "src/model/usuario";
 export const usuarioState = atom({
 	key: "usuarioState",
 	default: {
-		id: "",
+		uid: "",
 		email: "",
 		imagem: "",
-		senha: "",
 		telefone: ""
 	} as Usuario
 });

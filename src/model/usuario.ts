@@ -1,8 +1,7 @@
 /* eslint-disable semi */
 export default interface Usuario {
-    id: string;
+    uid: string;
     email: string;
     imagem: string;
-    senha: string;
     telefone: string;
 }

@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from "react";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { ActivityIndicator, Button, IconButton, Stack, Text, TextInput } from "@react-native-material/core";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { child, get, getDatabase, ref } from "firebase/database";
+import { useEffect, useState } from "react";
 import { Alert, Image, KeyboardAvoidingView, StyleSheet, TouchableOpacity, View } from "react-native";
-
+import Usuario from "src/model/usuario";
+import firebase from "src/utils/firebase";
+import useSetUsuario from "src/utils/hooks/setUsuario";
 
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -12,9 +15,12 @@ export default function Login({ navigation }: any) {
 	const [senha, setSenha] = useState("");
 	const [senhaVisivel, setSenhaVisivel] = useState(false);
 	const [carregando, setCarregando] = useState(false);
+	const setUsuario = useSetUsuario();
 
 	// eslint-disable-next-line @typescript-eslint/no-var-requires
 	const logo = require("../../../assets/logo.png");
+
+	const database = getDatabase(firebase);
 
 	const login = () => {
 		const auth = getAuth();
@@ -23,6 +29,15 @@ export default function Login({ navigation }: any) {
 			.then(() => {
 				setCarregando(false);
 				navigation.navigate("Home");
+				if (auth.currentUser)
+					get(child(ref(database), "usuario/" + auth.currentUser.uid)).then((snapshot) => {
+						console.log(snapshot.val());
+						if (snapshot.exists()) setUsuario({ ...snapshot.val(), uid: snapshot.key } as Usuario);
+						else console.log("No data available");
+					})
+						.catch((error) => {
+							console.error(error);
+						});
 			})
 			.catch((error) => {
 				setCarregando(false);
