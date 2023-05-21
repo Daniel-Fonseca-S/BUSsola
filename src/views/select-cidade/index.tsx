@@ -3,10 +3,10 @@ import { StyleSheet, View } from "react-native";
 import Cidade from "src/model/cidade";
 import Estado from "src/model/estado";
 import Menu from "src/components/menu";
+import useUsuario from "src/utils/hooks/useUsuario";
 import SelectDropdown from "react-native-select-dropdown";
 import { Button, Text } from "@react-native-material/core";
-import { child, get, getDatabase, ref, set } from "firebase/database";
-import { useUsuario } from "src/utils/hooks/useUsuario";
+import { child, get, getDatabase, ref, update } from "firebase/database";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function SelecionarCidade(vai: any) {
@@ -14,11 +14,12 @@ export default function SelecionarCidade(vai: any) {
 	const [estado, setEstado] = React.useState<Estado>();
 	const [cidades, setCidades] = React.useState<Cidade[]>([]);
 	const [cidade, setCidade] = React.useState<Cidade>();
+	const usuario = useUsuario();
 
 	const dropdownRef = React.useRef<SelectDropdown>(null);
 	const database = getDatabase();
 
-	const idUsuario = useUsuario().id;
+	const idUsuario: string = usuario.id;
 
 	useEffect(() => {
 		loadEstados();
@@ -30,8 +31,8 @@ export default function SelecionarCidade(vai: any) {
 	}, [estado]);
 
 	function setCidadeUsuario(cidade: string) {
-		set(ref(database, "usuario/" + idUsuario), {
-			reside: cidade + estado?.sigla
+		update(ref(database, "usuario/" + idUsuario), {
+			reside: cidade + " " + estado?.sigla
 		});
 	}
 
@@ -80,13 +81,16 @@ export default function SelecionarCidade(vai: any) {
 			if (snapshot.exists()) {
 				const cidadeUsuario = snapshot.val().reside;
 				if (cidadeUsuario !== undefined) {
-					const cidadeUsuarioSplit = cidadeUsuario.split(" ");
-					const cidadeUsuarioNome = cidadeUsuarioSplit[0];
-					const estadoUsuarioSigla = cidadeUsuarioSplit[1];
+					const cidadeUsuarioArray = cidadeUsuario.split(" ");
+					const cidadeUsuarioNome = cidadeUsuarioArray[0];
+					const estadoUsuarioSigla = cidadeUsuarioArray[1];
 					const estadoUsuario = estados.find((estado) => { return estado.sigla === estadoUsuarioSigla; });
 					if (estadoUsuario !== undefined) {
-						setEstado(estadoUsuario);
-						setCidade(cidades.find((cidade) => { return cidade.nome === cidadeUsuarioNome; }));
+						const cidadeUsuarioObj = cidades.find((cidade) => { return cidade.nome === cidadeUsuarioNome; });
+						if (cidadeUsuarioObj !== undefined) {
+							setEstado(estadoUsuario);
+							setCidade(cidadeUsuarioObj);
+						}
 					}
 				}
 			} else {
@@ -159,7 +163,7 @@ export default function SelecionarCidade(vai: any) {
 				title="Salvar Cidade"
 				style={styles.btn2}
 				onPress={() => { setCidadeUsuario(cidade?.nome ?? ""); vai.navigate("Rotas"); }}
-				disabled={cidade === undefined}
+				disabled={cidade === undefined || idUsuario === ""}
 			/>
 
 		</View>
