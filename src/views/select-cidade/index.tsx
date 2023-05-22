@@ -31,7 +31,10 @@ export default function SelecionarCidade(vai: any) {
 	}, [estado]);
 
 	function setCidadeUsuario() {
-		update(ref(database, "usuario/" + idUsuario), { reside: cidade?.nome + " " + estado?.sigla }).then(() => {
+		update(ref(database, "usuario/" + idUsuario), {
+			resideCidade: cidade,
+			resideEstado: estado
+		}).then(() => {
 			console.log("Cidade do usuário atualizada");
 			vai.navigation.navigate("Rotas");
 		}).catch((error) => {
