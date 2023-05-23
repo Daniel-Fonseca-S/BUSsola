@@ -68,7 +68,7 @@ export default function Cadastro({ navigation }: any) {
 			<View style={styles.content}>
 				<Text style={styles.title}>Cadastre-se</Text>
 				<Text style={{ fontSize: 25, color: "#B7B7B7" }}>Crie uma conta para continuar</Text>
-				L</View>
+			</View>
 			<View style={styles.content}>
 				<View style={{ marginBottom: 30, alignItems: "center" }}>
 					<TouchableOpacity onPress={pickImage}>
