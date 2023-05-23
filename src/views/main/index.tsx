@@ -46,8 +46,6 @@ export default function Mapa({ navigation }: any) {
 	function getRotaUsuario() {
 		get(ref(database, `usuario/${usuario.uid}/rota`)).then((snapshot) => {
 			if (snapshot.exists()) {
-
-				console.log("get rota: " + JSON.stringify(snapshot.val()));
 				setRota({
 					descricao: snapshot.val().descricao,
 					id: snapshot.val().id,
@@ -77,11 +75,6 @@ export default function Mapa({ navigation }: any) {
 		getCurrentPosition();
 		if (usuario.resideEstado !== undefined && usuario.resideCidade !== undefined) getRotaUsuario();
 	}, []);
-
-	useEffect(() => {
-		console.log("pontos: " + JSON.stringify(pontos));
-	}, [pontos]);
-
 
 	useEffect(() => {
 		if (usuario.resideEstado !== undefined && usuario.resideCidade !== undefined && usuario.rota !== undefined) {
