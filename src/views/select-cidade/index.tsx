@@ -28,10 +28,10 @@ export default function SelecionarCidade(vai: any) {
 		loadEstados();
 		if (estado !== undefined) {
 			loadCidades(estado);
+			setLoading(false);
 		}
 
 		verificarCidadeUsuario(idUsuario);
-		setLoading(false);
 	}, [estado]);
 
 	function setCidadeUsuario() {
@@ -63,6 +63,7 @@ export default function SelecionarCidade(vai: any) {
 			}
 			setEstados(newEstados);
 		}).catch((error) => {
+			setLoading(false);
 			console.error(error);
 		});
 	}
@@ -82,8 +83,10 @@ export default function SelecionarCidade(vai: any) {
 				console.log("Cidades não encontradas");
 			}
 			setCidades(newCidades);
+			setLoading(false);
 		}).catch((error) => {
 			console.error(error);
+			setLoading(false);
 		});
 	}
 
