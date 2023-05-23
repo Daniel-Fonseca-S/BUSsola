@@ -92,7 +92,7 @@ export default function Mapa({ navigation }: any) {
 
 			<View style={styles.cabecalho}>
 				<Text style={styles.titulo}>
-					{rota?.nome ?? "Sem rota definida"}
+					Rota: {rota?.nome ?? "Sem rota definida"}
 				</Text>
 
 				<Text style={styles.texto}>
@@ -169,6 +169,7 @@ const styles = StyleSheet.create({
 	titulo: {
 		fontSize: 30,
 		color: "#8D28FF",
+		alignSelf: "center",
 		fontWeight: "bold",
 	},
 	texto: {
