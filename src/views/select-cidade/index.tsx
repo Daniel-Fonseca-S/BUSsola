@@ -1,12 +1,13 @@
 import React, { useEffect } from "react";
-import { StyleSheet, View } from "react-native";
+import { Alert, StyleSheet, View } from "react-native";
 import Cidade from "src/model/cidade";
 import Estado from "src/model/estado";
 import Menu from "src/components/menu";
 import useUsuario from "src/utils/hooks/useUsuario";
 import SelectDropdown from "react-native-select-dropdown";
 import { Button, Text } from "@react-native-material/core";
-import { child, get, getDatabase, ref, update } from "firebase/database";
+import { child, get, getDatabase, ref, set, update } from "firebase/database";
+import Loading from "src/components/loading";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function SelecionarCidade(vai: any) {
@@ -14,6 +15,7 @@ export default function SelecionarCidade(vai: any) {
 	const [estado, setEstado] = React.useState<Estado>();
 	const [cidades, setCidades] = React.useState<Cidade[]>([]);
 	const [cidade, setCidade] = React.useState<Cidade>();
+	const [loading, setLoading] = React.useState<boolean>(false);
 	const usuario = useUsuario();
 
 	const dropdownRef = React.useRef<SelectDropdown>(null);
@@ -22,12 +24,14 @@ export default function SelecionarCidade(vai: any) {
 	const idUsuario: string = usuario.uid;
 
 	useEffect(() => {
+		setLoading(true);
 		loadEstados();
 		if (estado !== undefined) {
 			loadCidades(estado);
 		}
 
 		verificarCidadeUsuario(idUsuario);
+		setLoading(false);
 	}, [estado]);
 
 	function setCidadeUsuario() {
@@ -35,12 +39,12 @@ export default function SelecionarCidade(vai: any) {
 			resideCidade: cidade,
 			resideEstado: estado
 		}).then(() => {
-			console.log("Cidade do usuário atualizada");
-			vai.navigation.navigate("Rotas");
+			Alert.alert("Cidade atualizada com sucesso!");
+			setLoading(false);
 		}).catch((error) => {
-			console.error(error);
-		}
-		);
+			Alert.alert(error);
+			setLoading(false);
+		});
 	}
 
 	async function loadEstados() {
@@ -109,10 +113,10 @@ export default function SelecionarCidade(vai: any) {
 	}
 
 	return (
-		<View
-			style={styles.visao}>
+		<View style={styles.visao}>
 
 			<Menu />
+			<Loading carregando={loading} />
 
 			<View style={styles.cidade}>
 				<Text style={styles.titulo}>Cidades</Text>
@@ -169,7 +173,10 @@ export default function SelecionarCidade(vai: any) {
 			<Button
 				title="Salvar Cidade"
 				style={styles.btn2}
-				onPress={() => setCidadeUsuario()}
+				onPress={() => {
+					setLoading(true);
+					setCidadeUsuario();
+				}}
 				disabled={cidade === undefined || idUsuario === ""}
 			/>
 
