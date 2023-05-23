@@ -17,7 +17,7 @@ export default function Loading(props: LoadingProps) {
 				opacity: props ? 1 : 0
 			}}
 		>
-			<ActivityIndicator size={50} animating={props.carregando} />
+			<ActivityIndicator size={50} animating={props.carregando} color={"#8D28FF"} />
 		</View>
 	);
 }
