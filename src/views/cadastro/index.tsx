@@ -7,6 +7,7 @@ import React from "react";
 import { Alert, Image, Text, TouchableOpacity, View } from "react-native";
 import firebase from "src/utils/firebase";
 import style from "./style";
+import Loading from "src/components/loading";
 
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -19,6 +20,7 @@ export default function Cadastro({ navigation }: any) {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const [image, setImage] = React.useState<any>();
 	const [imagemEnviada, setImagemEnviada] = React.useState("");
+	const [loading, setLoading] = React.useState(false);
 
 	const database = getDatabase(firebase);
 
@@ -26,19 +28,19 @@ export default function Cadastro({ navigation }: any) {
 		const auth = getAuth();
 		createUserWithEmailAndPassword(auth, email, senha)
 			.then((userCredential) => {
-				console.log(userCredential);
-
 				set(ref(database, "usuario/" + userCredential.user.uid), {
 					telefone: telefone,
 					email: email,
 					senha: senha,
 					image: imagemEnviada,
 				});
-
+				Alert.alert("Sucesso", "Usuário cadastrado com sucesso!");
+				setLoading(false);
 				navigation.navigate("Log Out");
 			})
 			.catch((error) => {
 				Alert.alert("Erro", error.message, [{ text: "OK" }], { cancelable: false });
+				setLoading(false);
 			});
 	}
 
@@ -61,10 +63,12 @@ export default function Cadastro({ navigation }: any) {
 
 	return (
 		<View style={styles.container}>
+			<Loading carregando={loading} />
+
 			<View style={styles.content}>
 				<Text style={styles.title}>Cadastre-se</Text>
 				<Text style={{ fontSize: 25, color: "#B7B7B7" }}>Crie uma conta para continuar</Text>
-			</View>
+				L</View>
 			<View style={styles.content}>
 				<View style={{ marginBottom: 30, alignItems: "center" }}>
 					<TouchableOpacity onPress={pickImage}>
@@ -117,11 +121,14 @@ export default function Cadastro({ navigation }: any) {
 				/>
 			</View>
 			<View style={styles.bottomContent}>
-				<Button 
-					style={styles.button} 
+				<Button
+					style={styles.button}
 					title="Cadastrar"
 					contentContainerStyle={{ height: 50 }}
-					onPress={cadastro}
+					onPress={() => {
+						setLoading(true);
+						cadastro();
+					}}
 					disabled={email == "" || telefone == "" || senha == ""}
 				/>
 				<Text style={{ fontSize: 20, color: "#B7B7B7" }}>Já tem uma conta?</Text>

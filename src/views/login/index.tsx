@@ -1,9 +1,10 @@
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
-import { ActivityIndicator, Button, IconButton, Stack, Text, TextInput } from "@react-native-material/core";
+import { Button, IconButton, Stack, Text, TextInput } from "@react-native-material/core";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { child, get, getDatabase, ref } from "firebase/database";
 import { useEffect, useState } from "react";
-import { Alert, Image, KeyboardAvoidingView, StyleSheet, TouchableOpacity, View } from "react-native";
+import { Alert, Image, KeyboardAvoidingView, StyleSheet, TouchableOpacity } from "react-native";
+import Loading from "src/components/loading";
 import Usuario from "src/model/usuario";
 import firebase from "src/utils/firebase";
 import useSetUsuario from "src/utils/hooks/setUsuario";
@@ -87,18 +88,7 @@ export default function Login({ navigation }: any) {
 					)}
 				/>
 
-				<View
-					style={{
-						position: "absolute",
-						top: "50%",
-						left: "50%",
-						marginTop: -25,
-						marginLeft: -25,
-						opacity: carregando ? 1 : 0
-					}}
-				>
-					<ActivityIndicator size={50} animating={carregando} />
-				</View>
+				<Loading carregando={carregando} />
 
 				<TouchableOpacity onPress={() => navigation.navigate("Recuperar Senha")}>
 					<Text style={styles.texto}>

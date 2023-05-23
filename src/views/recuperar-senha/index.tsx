@@ -1,13 +1,16 @@
 import { Button, Text, TextInput } from "@react-native-material/core";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
-import { useState } from "react";
-import { KeyboardAvoidingView, StyleSheet, TextInput as Input, View } from "react-native";
+import { useEffect, useState } from "react";
+import { KeyboardAvoidingView, StyleSheet, TextInput as Input, View, Alert } from "react-native";
+import firebase from "src/utils/firebase";
+import { getDatabase, ref, set } from "firebase/database";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export default function RecuperarSenha({navigation}: any) {
+export default function RecuperarSenha({ navigation }: any) {
 
 	const [telefone, setTelefone] = useState("");
 	const [codigo, setCodigo] = useState("");
+	const [enableReinitialize, setEnableReinitialize] = useState(false);
 
 	const phoneMask = (value: string) => {
 		if (!value) setTelefone("");
@@ -16,6 +19,27 @@ export default function RecuperarSenha({navigation}: any) {
 		value = value.replace(/(\d)(\d{4})$/, "$1-$2");
 		setTelefone(value);
 	};
+
+	const genCodigo = () => {
+		let codigo = "";
+		for (let i = 0; i < 6; i++) {
+			codigo += Math.floor(Math.random() * 10).toString();
+		}
+		console.log("codigo: " + codigo)
+		setCodigo(codigo);
+	};
+
+	useEffect(() => {
+		if (!enableReinitialize) {
+			setEnableReinitialize(true);
+			return;
+		}
+		Alert.alert("Código de verificação", codigo, [{ text: "OK" }], { cancelable: false });
+	}, [codigo]);
+
+	//create message box showing the generated code
+
+	const database = getDatabase(firebase);
 
 	return (
 		<KeyboardAvoidingView
@@ -39,7 +63,10 @@ export default function RecuperarSenha({navigation}: any) {
 			<Button
 				title="Enviar código"
 				style={styles.botao}
-				onPress={() => { console.log("teste"); }}
+				onPress={() => {
+					console.log("teste");
+					if (telefone.length > 13) genCodigo();
+				}}
 				disabled={telefone.length < 15}
 			/>
 
