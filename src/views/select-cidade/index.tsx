@@ -10,7 +10,7 @@ import Estado from "src/model/estado";
 import useUsuario from "src/utils/hooks/useUsuario";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export default function SelecionarCidade() {
+export default function SelecionarCidade(vai: any) {
 	const [estados, setEstados] = React.useState<Estado[]>([]);
 	const [estado, setEstado] = React.useState<Estado>();
 	const [cidades, setCidades] = React.useState<Cidade[]>([]);
@@ -23,32 +23,22 @@ export default function SelecionarCidade() {
 
 	const idUsuario: string = usuario.uid;
 
+	//inicializa os estados e cidades
 	useEffect(() => {
 		setLoading(true);
 		loadEstados();
-		if (estado !== undefined) {
-			loadCidades(estado);
-			setLoading(false);
-		}
-
 		verificarCidadeUsuario(idUsuario);
+	}, []);
+
+	useEffect(() => {
+		if (estado !== undefined) {
+			setLoading(true);
+			loadCidades();
+		}
 	}, [estado]);
 
-	function setCidadeUsuario() {
-		update(ref(database, "usuario/" + idUsuario), {
-			resideCidade: cidade,
-			resideEstado: estado
-		}).then(() => {
-			Alert.alert("Cidade atualizada com sucesso!");
-			setLoading(false);
-		}).catch((error) => {
-			Alert.alert(error);
-			setLoading(false);
-		});
-	}
-
 	async function loadEstados() {
-		get(child(ref(database), "estado")).then((snapshot) => {
+		await get(child(ref(database), "estado")).then((snapshot) => {
 			const newEstados: Estado[] = [];
 			if (snapshot.exists()) {
 				snapshot.forEach((childSnapshot) => {
@@ -62,15 +52,14 @@ export default function SelecionarCidade() {
 				console.log("Estados não encontrados");
 			}
 			setEstados(newEstados);
-			setLoading(false);
 		}).catch((error) => {
-			setLoading(false);
 			console.error(error);
 		});
+		setLoading(false);
 	}
 
-	async function loadCidades(estado: Estado) {
-		get(child(ref(database), "estado/" + estado.id + "/cidade")).then((snapshot) => {
+	async function loadCidades() {
+		await get(child(ref(database), "estado/" + estado?.id + "/cidade")).then((snapshot) => {
 			const newCidades: Cidade[] = [];
 			if (snapshot.exists()) {
 				snapshot.forEach((childSnapshot) => {
@@ -84,29 +73,19 @@ export default function SelecionarCidade() {
 				console.log("Cidades não encontradas");
 			}
 			setCidades(newCidades);
-			setLoading(false);
 		}).catch((error) => {
 			console.error(error);
-			setLoading(false);
 		});
+		setLoading(false);
 	}
 
 	async function verificarCidadeUsuario(idUsuario: string) {
-		get(child(ref(database), "usuario/" + idUsuario)).then((snapshot) => {
+		await get(child(ref(database), "usuario/" + idUsuario)).then((snapshot) => {
 			if (snapshot.exists()) {
-				const cidadeUsuario = snapshot.val().reside;
+				const cidadeUsuario: Cidade | undefined = snapshot.val().resideCidade;
 				if (cidadeUsuario !== undefined) {
-					const cidadeUsuarioArray = cidadeUsuario.split(" ");
-					const cidadeUsuarioNome = cidadeUsuarioArray[0];
-					const estadoUsuarioSigla = cidadeUsuarioArray[1];
-					const estadoUsuario = estados.find((estado) => { return estado.sigla === estadoUsuarioSigla; });
-					if (estadoUsuario !== undefined) {
-						const cidadeUsuarioObj = cidades.find((cidade) => { return cidade.nome === cidadeUsuarioNome; });
-						if (cidadeUsuarioObj !== undefined) {
-							setEstado(estadoUsuario);
-							setCidade(cidadeUsuarioObj);
-						}
-					}
+					setCidade(cidadeUsuario);
+					setEstado(snapshot.val().resideEstado);
 				}
 			} else {
 				console.log("Usuário não encontrado");
@@ -114,6 +93,22 @@ export default function SelecionarCidade() {
 		}).catch((error) => {
 			console.error(error);
 		});
+		setLoading(false);
+	}
+
+	async function setCidadeUsuario() {
+		await update(ref(database, "usuario/" + idUsuario), {
+			resideCidade: { id: cidade?.id, nome: cidade?.nome },
+			resideEstado: { id: estado?.id, nome: estado?.nome, sigla: estado?.sigla },
+			rota: null
+		}).then(() => {
+			console.log("Cidade do usuário atualizada");
+			Alert.alert("Cidade atualizada com sucesso!");
+			vai.navigation.navigate("Rotas");
+		}).catch((error) => {
+			console.error(error);
+		}
+		);
 	}
 
 	return (
@@ -133,18 +128,10 @@ export default function SelecionarCidade() {
 						buttonTextStyle={styles.btntxt}
 						dropdownStyle={styles.selector}
 						rowTextStyle={styles.row}
-						data={estados.map((estado) => { return `${estado.nome} (${estado.sigla})`; }) ?? []}
-						onSelect={(selectedItem) => {
-							setEstado(estados.find((estado) => { return `${estado.nome} (${estado.sigla})` === selectedItem; }));
-							setCidade(undefined);
-							dropdownRef.current?.reset();
-						}}
-						buttonTextAfterSelection={(selectedItem) => {
-							return selectedItem;
-						}}
-						rowTextForSelection={(item) => {
-							return item;
-						}}
+						data={estados}
+						onSelect={(selectedItem: Estado) => { setEstado(selectedItem); setCidade(undefined); }}
+						buttonTextAfterSelection={(selectedItem: Estado) => { return `${selectedItem.nome}  (${selectedItem.sigla})`; }}
+						rowTextForSelection={(item: Estado) => { return `${item.nome}  (${item.sigla})`; }}
 					/>
 				</View>
 
@@ -157,18 +144,11 @@ export default function SelecionarCidade() {
 						buttonTextStyle={styles.btntxt}
 						dropdownStyle={styles.selector}
 						rowTextStyle={styles.row}
-						data={cidades.map((cidade) => { return cidade.nome; }) ?? []}
+						data={cidades}
 						ref={dropdownRef}
-						onSelect={(selectedItem) => {
-							setCidade(cidades.find((cidade) => { return cidade.nome === selectedItem; }));
-							dropdownRef.current?.reset();
-						}}
-						buttonTextAfterSelection={(selectedItem) => {
-							return selectedItem;
-						}}
-						rowTextForSelection={(item) => {
-							return item;
-						}}
+						onSelect={(selectedItem: Cidade) => { setCidade(selectedItem); }}
+						buttonTextAfterSelection={(selectedItem: Cidade) => selectedItem.nome}
+						rowTextForSelection={(item: Cidade) => item.nome}
 						disabled={estado === undefined}
 					/>
 				</View>
