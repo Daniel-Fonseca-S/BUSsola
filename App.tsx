@@ -1,5 +1,5 @@
 import React from "react";
-import Rota from "src/views/main";
+import Mapa from "src/views/main";
 import Login from "src/views/login";
 import { RecoilRoot } from "recoil";
 import Cadastro from "src/views/cadastro";
@@ -25,7 +25,7 @@ export default function App() {
 						<Stack.Screen name="Log Out" component={Login} options={{ headerShown: false }} />
 						<Stack.Screen name="Nova Senha" component={NovaSenha} options={{ headerShown: false }} />
 						<Stack.Screen name="Recuperar Senha" component={RecuperarSenha} options={{ headerShown: false }} />
-						<Stack.Screen name="Home" component={Rota} options={{ headerShown: false }} />
+						<Stack.Screen name="Home" component={Mapa} options={{ headerShown: false }} />
 						<Stack.Screen name="Cadastro" component={Cadastro} options={{ headerShown: false }} />
 						<Stack.Screen name="Selecionar Rota" component={SelecionarRota} options={{ headerShown: false }} />
 						<Stack.Screen name="Parada de Embarque" component={ParadaEmbarque} options={{ headerShown: false }} />
