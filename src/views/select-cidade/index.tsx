@@ -25,19 +25,18 @@ export default function SelecionarCidade(vai: any) {
 
 	//inicializa os estados e cidades
 	useEffect(() => {
-		setLoading(true);
 		loadEstados();
 		verificarCidadeUsuario(idUsuario);
 	}, []);
 
 	useEffect(() => {
 		if (estado !== undefined) {
-			setLoading(true);
 			loadCidades();
 		}
 	}, [estado]);
 
 	async function loadEstados() {
+		setLoading(true);
 		await get(child(ref(database), "estado")).then((snapshot) => {
 			const newEstados: Estado[] = [];
 			if (snapshot.exists()) {
@@ -59,6 +58,7 @@ export default function SelecionarCidade(vai: any) {
 	}
 
 	async function loadCidades() {
+		setLoading(true);
 		await get(child(ref(database), "estado/" + estado?.id + "/cidade")).then((snapshot) => {
 			const newCidades: Cidade[] = [];
 			if (snapshot.exists()) {
@@ -80,6 +80,7 @@ export default function SelecionarCidade(vai: any) {
 	}
 
 	async function verificarCidadeUsuario(idUsuario: string) {
+		setLoading(true);
 		await get(child(ref(database), "usuario/" + idUsuario)).then((snapshot) => {
 			if (snapshot.exists()) {
 				const cidadeUsuario: Cidade | undefined = snapshot.val().resideCidade;
@@ -97,6 +98,7 @@ export default function SelecionarCidade(vai: any) {
 	}
 
 	async function setCidadeUsuario() {
+		setLoading(true);
 		await update(ref(database, "usuario/" + idUsuario), {
 			resideCidade: { id: cidade?.id, nome: cidade?.nome },
 			resideEstado: { id: estado?.id, nome: estado?.nome, sigla: estado?.sigla },
@@ -109,6 +111,7 @@ export default function SelecionarCidade(vai: any) {
 			console.error(error);
 		}
 		);
+		setLoading(false);
 	}
 
 	return (
@@ -132,6 +135,7 @@ export default function SelecionarCidade(vai: any) {
 						onSelect={(selectedItem: Estado) => { setEstado(selectedItem); setCidade(undefined); }}
 						buttonTextAfterSelection={(selectedItem: Estado) => { return `${selectedItem.nome}  (${selectedItem.sigla})`; }}
 						rowTextForSelection={(item: Estado) => { return `${item.nome}  (${item.sigla})`; }}
+						disabled={loading}
 					/>
 				</View>
 
@@ -149,7 +153,7 @@ export default function SelecionarCidade(vai: any) {
 						onSelect={(selectedItem: Cidade) => { setCidade(selectedItem); }}
 						buttonTextAfterSelection={(selectedItem: Cidade) => selectedItem.nome}
 						rowTextForSelection={(item: Cidade) => item.nome}
-						disabled={estado === undefined}
+						disabled={estado === undefined || loading}
 					/>
 				</View>
 			</View>

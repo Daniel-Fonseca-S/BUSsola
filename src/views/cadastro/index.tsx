@@ -25,26 +25,27 @@ export default function Cadastro({ navigation }: any) {
 	const database = getDatabase(firebase);
 
 	async function cadastro() {
+		setLoading(true);
 		const auth = getAuth();
-		createUserWithEmailAndPassword(auth, email, senha)
-			.then((userCredential) => {
-				set(ref(database, "usuario/" + userCredential.user.uid), {
+		await createUserWithEmailAndPassword(auth, email, senha)
+			.then(async (userCredential) => {
+				await set(ref(database, "usuario/" + userCredential.user.uid), {
 					telefone: telefone,
 					email: email,
 					senha: senha,
 					image: imagemEnviada,
 				});
 				Alert.alert("Sucesso", "Usuário cadastrado com sucesso!");
-				setLoading(false);
 				navigation.navigate("Log Out");
 			})
 			.catch((error) => {
 				Alert.alert("Erro", error.message, [{ text: "OK" }], { cancelable: false });
-				setLoading(false);
 			});
+		setLoading(false);
 	}
 
 	const pickImage = async () => {
+		setLoading(true);
 		// No permissions request is necessary for launching the image library
 		const result = await ImagePicker.launchImageLibraryAsync({
 			mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -59,6 +60,7 @@ export default function Cadastro({ navigation }: any) {
 			if (result.assets[0].base64 != undefined)
 				setImagemEnviada(result.assets[0].base64);
 		}
+		setLoading(false);
 	};
 
 	return (
@@ -126,7 +128,6 @@ export default function Cadastro({ navigation }: any) {
 					title="Cadastrar"
 					contentContainerStyle={{ height: 50 }}
 					onPress={() => {
-						setLoading(true);
 						cadastro();
 					}}
 					disabled={email == "" || telefone == "" || senha == ""}

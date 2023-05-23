@@ -23,22 +23,23 @@ export default function SelecionarRota(vai: any) {
 	const idUsuario: string = usuario.uid;
 
 	async function getCidadeUsuario() {
-		get(child(ref(database), "usuario/" + idUsuario)).then((snapshot) => {
+		setLoading(true);
+		await get(child(ref(database), "usuario/" + idUsuario)).then((snapshot) => {
 			if (snapshot.exists()) {
 				setCidade(snapshot.val().resideCidade);
 				setEstado(snapshot.val().resideEstado);
 			} else {
 				console.log("Usuário não encontrado");
 			}
-			setLoading(false);
 		}).catch((error) => {
 			console.error(error);
-			setLoading(false);
 		});
+		setLoading(false);
 	}
 
 	async function loadRotas() {
-		get(child(ref(database), `estado/${estado?.id}/cidade/${cidade?.id}/rota`)).then((snapshot) => {
+		setLoading(true);
+		await get(child(ref(database), `estado/${estado?.id}/cidade/${cidade?.id}/rota`)).then((snapshot) => {
 			const newRotas: Rota[] = [];
 			if (snapshot.exists()) {
 				snapshot.forEach((childSnapshot) => {
@@ -57,10 +58,10 @@ export default function SelecionarRota(vai: any) {
 		}).catch((error) => {
 			console.error(error);
 		});
+		setLoading(false);
 	}
 
 	useEffect(() => {
-		setLoading(true);
 		getCidadeUsuario();
 	}, []);
 
@@ -97,27 +98,31 @@ export default function SelecionarRota(vai: any) {
 }
 
 interface propsItemRota {
-	rota: Rota
+	rota: Rota;
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	vai: any
-	setRotaUsuario?: () => void
+	vai: any;
+	setRotaUsuario?: () => void;
 }
 
 function ItemRota(props: propsItemRota) {
 
 	const database = getDatabase();
 	const idUsuario: string = useUsuario().uid;
+	const [loading, setLoading] = React.useState<boolean>(false);
 
-	function setRotaUsuario() {
-		set(ref(database, "usuario/" + idUsuario + "/rota"), props.rota).then(() => {
+	async function setRotaUsuario() {
+		setLoading(true);
+		await set(ref(database, "usuario/" + idUsuario + "/rota"), props.rota).then(() => {
 			Alert.alert("Rota selecionada com sucesso");
 		}).catch((error) => {
 			Alert.alert("Erro ao selecionar rota - ", error.message);
 		});
+		setLoading(false);
 	}
 	return (
 		<View
 			style={styles.linha}>
+			<Loading carregando={loading} />
 			<Text
 				style={styles.lbl}>
 				Rota: {props.rota.nome}

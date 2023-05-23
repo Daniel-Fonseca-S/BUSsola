@@ -23,12 +23,11 @@ export default function Login({ navigation }: any) {
 
 	const database = getDatabase(firebase);
 
-	const login = () => {
+	const login = async () => {
 		const auth = getAuth();
 		setCarregando(true);
-		signInWithEmailAndPassword(auth, email, senha)
+		await signInWithEmailAndPassword(auth, email, senha)
 			.then(() => {
-				setCarregando(false);
 				navigation.navigate("Home");
 				if (auth.currentUser)
 					get(child(ref(database), "usuario/" + auth.currentUser.uid)).then((snapshot) => {
@@ -40,9 +39,9 @@ export default function Login({ navigation }: any) {
 						});
 			})
 			.catch((error) => {
-				setCarregando(false);
 				Alert.alert("Erro", error.message, [{ text: "OK" }], { cancelable: false });
 			});
+		setCarregando(false);
 	};
 
 	useEffect(() => {
