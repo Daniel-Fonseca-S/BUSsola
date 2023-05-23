@@ -3,10 +3,13 @@ import { routes } from "../../utils/routes";
 import { navigationPop, navigationPush } from "src/utils/navigationFun";
 import { Image, Modal, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
+import useUsuario from "src/utils/hooks/useUsuario";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function Menu() {
 	const [menuAtivo, setMenuAtivo] = useState(false);
+	const usuario = useUsuario();
+	const base64Image = `data:image/png;base64,${usuario.image}`;
 
 	return (
 		<View style={styles.container}>
@@ -25,11 +28,15 @@ export default function Menu() {
 							<Image source={require("src/assets/icons/close.png")} style={menuAtivo ? styles.closeIcon : styles.disabled} />
 						</TouchableOpacity>
 						<View style={styles.userImage}>
-							<Image source={require("src/assets/icons/user.png")} style={{ width: 100, height: 100, borderRadius: 50 }} />
+							{usuario.image === "" ?
+								<Image source={require("src/assets/icons/user.png")} style={{ width: 100, height: 100, borderRadius: 50 }} />
+								:
+								<Image source={{ uri: base64Image }} style={{ width: 100, height: 100, borderRadius: 50 }} />
+							}
 						</View>
 						<View style={styles.userInfo}>
-							<Text>Usuário 001</Text>
-							<Text>Cidade: Dois Vizinhos</Text>
+							<Text>{usuario.email}</Text>
+							<Text>Cidade: {usuario.resideCidade?.nome ? usuario.resideCidade?.nome : "Não definida"}</Text>
 						</View>
 						<View style={styles.routes}>
 							{routes.map((route) => (

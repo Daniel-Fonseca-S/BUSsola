@@ -6,7 +6,7 @@ export const usuarioState = atom({
 	default: {
 		uid: "",
 		email: "",
-		imagem: "",
+		image: "",
 		telefone: ""
 	} as Usuario
 });
