@@ -6,9 +6,9 @@ import Rota from "./rota";
 export default interface Usuario {
     uid: string;
     email: string;
-    imagem: string;
+    image: string;
     telefone: string;
     resideCidade: Cidade;
     resideEstado: Estado;
-    rota: Rota
+    rota: Rota;
 }
