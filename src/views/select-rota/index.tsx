@@ -5,8 +5,9 @@ import Cidade from "src/model/cidade";
 import Estado from "src/model/estado";
 import Menu from "src/components/menu";
 import useUsuario from "src/utils/hooks/useUsuario";
-import { StyleSheet, View } from "react-native";
-import { child, get, getDatabase, ref } from "firebase/database";
+import { Alert, StyleSheet, View } from "react-native";
+import { child, get, getDatabase, ref, set } from "firebase/database";
+import Loading from "src/components/loading";
 
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -15,6 +16,7 @@ export default function SelecionarRota(vai: any) {
 	const [cidade, setCidade] = React.useState<Cidade>();
 	const [rotas, setRotas] = React.useState<Rota[]>([]);
 	const usuario = useUsuario();
+	const [loading, setLoading] = React.useState<boolean>(false);
 
 	const database = getDatabase();
 
@@ -28,8 +30,10 @@ export default function SelecionarRota(vai: any) {
 			} else {
 				console.log("Usuário não encontrado");
 			}
+			setLoading(false);
 		}).catch((error) => {
 			console.error(error);
+			setLoading(false);
 		});
 	}
 
@@ -56,12 +60,11 @@ export default function SelecionarRota(vai: any) {
 	}
 
 	useEffect(() => {
+		setLoading(true);
 		getCidadeUsuario();
 	}, []);
 
 	useEffect(() => {
-		console.log("Cidade: " + cidade?.nome);
-		console.log("Estado: " + estado?.nome);
 		if (cidade !== undefined && estado !== undefined) {
 			loadRotas();
 		}
@@ -70,6 +73,7 @@ export default function SelecionarRota(vai: any) {
 	return (
 		<View style={styles.rota}>
 			<Menu />
+			<Loading carregando={loading} />
 			<Text style={styles.titulo}>Rotas</Text>
 			<Stack
 				style={styles.tackstack}>
@@ -93,12 +97,25 @@ export default function SelecionarRota(vai: any) {
 }
 
 interface propsItemRota {
-	rota: Rota;
+	rota: Rota
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	vai: any;
+	vai: any
+	setRotaUsuario?: () => void
 }
 
 function ItemRota(props: propsItemRota) {
+
+	const database = getDatabase();
+	const idUsuario: string = useUsuario().uid;
+
+	function setRotaUsuario() {
+		set(ref(database, "usuario/" + idUsuario + "/rota"), props.rota).then(() => {
+			Alert.alert("Rota selecionada com sucesso");
+			props.vai.navigation.navigate("Home");
+		}).catch((error) => {
+			Alert.alert("Erro ao selecionar rota - ", error.message);
+		});
+	}
 	return (
 		<View
 			style={styles.linha}>
@@ -110,7 +127,7 @@ function ItemRota(props: propsItemRota) {
 				title={"IR"}
 				color={"#8D28FF"}
 				style={styles.butn}
-				onPress={() => { props.vai.navigation.navigate("Home"); }}
+				onPress={() => { setRotaUsuario(); }}
 			/>
 		</View>
 	);

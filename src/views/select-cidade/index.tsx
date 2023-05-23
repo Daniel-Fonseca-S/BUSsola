@@ -1,16 +1,16 @@
+import { Button, Text } from "@react-native-material/core";
+import { child, get, getDatabase, ref, update } from "firebase/database";
 import React, { useEffect } from "react";
 import { Alert, StyleSheet, View } from "react-native";
+import SelectDropdown from "react-native-select-dropdown";
+import Loading from "src/components/loading";
+import Menu from "src/components/menu";
 import Cidade from "src/model/cidade";
 import Estado from "src/model/estado";
-import Menu from "src/components/menu";
 import useUsuario from "src/utils/hooks/useUsuario";
-import SelectDropdown from "react-native-select-dropdown";
-import { Button, Text } from "@react-native-material/core";
-import { child, get, getDatabase, ref, set, update } from "firebase/database";
-import Loading from "src/components/loading";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export default function SelecionarCidade(vai: any) {
+export default function SelecionarCidade() {
 	const [estados, setEstados] = React.useState<Estado[]>([]);
 	const [estado, setEstado] = React.useState<Estado>();
 	const [cidades, setCidades] = React.useState<Cidade[]>([]);
@@ -62,6 +62,7 @@ export default function SelecionarCidade(vai: any) {
 				console.log("Estados não encontrados");
 			}
 			setEstados(newEstados);
+			setLoading(false);
 		}).catch((error) => {
 			setLoading(false);
 			console.error(error);
