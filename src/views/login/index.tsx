@@ -125,7 +125,8 @@ const styles = StyleSheet.create({
 		flex: 1,
 		alignItems: "center",
 		backgroundColor: "#000",
-		paddingTop: 50
+		paddingTop: 50,
+		height: "100%",
 	},
 	meio: {
 		width: "100%",

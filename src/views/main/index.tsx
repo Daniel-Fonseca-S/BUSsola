@@ -9,6 +9,7 @@ import MapView, {
 	PROVIDER_GOOGLE,
 	Region,
 } from "react-native-maps";
+import Loading from "src/components/loading";
 import Menu from "src/components/menu";
 import Ponto from "src/model/ponto";
 import Rota from "src/model/rota";
@@ -27,6 +28,7 @@ export default function Mapa({ navigation }: any) {
 	const [pontos, setPontos] = useState<Ponto[]>([]);
 	const [rota, setRota] = useState<Rota | undefined>();
 	const usuario = useUsuario();
+	const [loading, setLoading] = useState(false);
 
 	const database = getDatabase();
 
@@ -44,6 +46,7 @@ export default function Mapa({ navigation }: any) {
 	};
 
 	function getRotaUsuario() {
+		setLoading(true);
 		get(ref(database, `usuario/${usuario?.uid}/rota`)).then((snapshot) => {
 			if (snapshot.exists()) {
 				setRota({
@@ -52,10 +55,14 @@ export default function Mapa({ navigation }: any) {
 					nome: snapshot.val().nome,
 				});
 			}
+		}).catch((error) => {
+			console.error(error);
+			setLoading(false);
 		});
 	}
 
 	function getPontos() {
+		setLoading(true);
 		get(ref(database, `estado/${usuario?.resideEstado.id}/cidade/${usuario?.resideCidade.id}/rota/${usuario?.rota.id}/ponto`)).then((snapshot) => {
 			if (snapshot.exists()) {
 				const pontos: Ponto[] = [];
@@ -67,13 +74,19 @@ export default function Mapa({ navigation }: any) {
 					});
 				});
 				setPontos(pontos);
+				setLoading(false);
 			}
+		}).catch(() => {
+			Alert.alert("Ops!", "Não foi possível carregar os pontos.");
+			setLoading(false);
 		});
 	}
 
 	useEffect(() => {
+		setLoading(true);
 		getCurrentPosition();
 		if (usuario?.resideEstado !== undefined && usuario?.resideCidade !== undefined) getRotaUsuario();
+		else setLoading(false);
 	}, []);
 
 	useEffect(() => {
@@ -89,6 +102,7 @@ export default function Mapa({ navigation }: any) {
 	return (
 		<View style={styles.container}>
 			<Menu />
+			<Loading carregando={loading} />
 
 			<View style={styles.cabecalho}>
 				<Text style={styles.titulo}>
