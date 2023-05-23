@@ -1,7 +1,7 @@
 import { Button, Text } from "@react-native-material/core";
 import { child, get, getDatabase, ref, update } from "firebase/database";
 import React, { useEffect } from "react";
-import { StyleSheet, View } from "react-native";
+import { Alert, StyleSheet, View } from "react-native";
 import SelectDropdown from "react-native-select-dropdown";
 import Loading from "src/components/loading";
 import Menu from "src/components/menu";
@@ -32,6 +32,7 @@ export default function SelecionarCidade(vai: any) {
 
 	useEffect(() => {
 		if (estado !== undefined) {
+			setLoading(true);
 			loadCidades();
 		}
 	}, [estado]);
@@ -51,11 +52,10 @@ export default function SelecionarCidade(vai: any) {
 				console.log("Estados não encontrados");
 			}
 			setEstados(newEstados);
-			setLoading(false);
 		}).catch((error) => {
-			setLoading(false);
 			console.error(error);
 		});
+		setLoading(false);
 	}
 
 	async function loadCidades() {
@@ -73,11 +73,10 @@ export default function SelecionarCidade(vai: any) {
 				console.log("Cidades não encontradas");
 			}
 			setCidades(newCidades);
-			setLoading(false);
 		}).catch((error) => {
 			console.error(error);
-			setLoading(false);
 		});
+		setLoading(false);
 	}
 
 	async function verificarCidadeUsuario(idUsuario: string) {
@@ -94,14 +93,17 @@ export default function SelecionarCidade(vai: any) {
 		}).catch((error) => {
 			console.error(error);
 		});
+		setLoading(false);
 	}
 
 	async function setCidadeUsuario() {
 		await update(ref(database, "usuario/" + idUsuario), {
 			resideCidade: { id: cidade?.id, nome: cidade?.nome },
-			resideEstado: { id: estado?.id, nome: estado?.nome, sigla: estado?.sigla }
+			resideEstado: { id: estado?.id, nome: estado?.nome, sigla: estado?.sigla },
+			rota: null
 		}).then(() => {
 			console.log("Cidade do usuário atualizada");
+			Alert.alert("Cidade atualizada com sucesso!");
 			vai.navigation.navigate("Rotas");
 		}).catch((error) => {
 			console.error(error);
