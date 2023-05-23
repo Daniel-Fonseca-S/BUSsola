@@ -1,7 +1,8 @@
 /* eslint-disable semi */
 export default interface Ponto {
-    id: string;
-    localizacao: string;
+    uid: string;
+    latitude: number;
+    longitude: number;
     descricao: string;
     rua: string;
     bairro: string;

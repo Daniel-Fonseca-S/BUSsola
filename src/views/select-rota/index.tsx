@@ -111,7 +111,6 @@ function ItemRota(props: propsItemRota) {
 	function setRotaUsuario() {
 		set(ref(database, "usuario/" + idUsuario + "/rota"), props.rota).then(() => {
 			Alert.alert("Rota selecionada com sucesso");
-			props.vai.navigation.navigate("Home");
 		}).catch((error) => {
 			Alert.alert("Erro ao selecionar rota - ", error.message);
 		});

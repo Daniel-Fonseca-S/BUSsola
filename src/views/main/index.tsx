@@ -1,6 +1,7 @@
 import { Button, Text } from "@react-native-material/core";
 import * as Location from "expo-location";
 import { LocationObject } from "expo-location";
+import { get, getDatabase, ref } from "firebase/database";
 import React, { useEffect, useState } from "react";
 import { Alert, StyleSheet, View } from "react-native";
 import MapView, {
@@ -10,7 +11,9 @@ import MapView, {
 	Region,
 } from "react-native-maps";
 import Menu from "src/components/menu";
-import Ponto from "./models/ponto";
+import Ponto from "src/model/ponto";
+import Rota from "src/model/rota";
+import useUsuario from "src/utils/hooks/useUsuario";
 
 const initialRegion = {
 	latitude: -25.443195,
@@ -19,17 +22,14 @@ const initialRegion = {
 	longitudeDelta: 0.0421,
 };
 
-const pontos: Ponto[] = [
-
-];
-
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export default function Rota({ navigation }: any) {
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	const [location, setLocation] = useState<LocationObject | null>(null);
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	const [errorMsg, setErrorMsg] = useState<string | null>(null);
+export default function Mapa({ navigation }: any) {
 	const [region, setRegion] = useState<Region>();
+	const [pontos, setPontos] = useState<Ponto[]>([]);
+	const [rota, setRota] = useState<Rota | undefined>();
+	const usuario = useUsuario();
+
+	const database = getDatabase();
 
 	const getCurrentPosition = async () => {
 		const { status } = await Location.requestForegroundPermissionsAsync();
@@ -44,17 +44,55 @@ export default function Rota({ navigation }: any) {
 		setRegion({ latitude, longitude, latitudeDelta: 100, longitudeDelta: 100 });
 	};
 
+	function getRotaUsuario() {
+		get(ref(database, `usuario/${usuario.uid}/rota`)).then((snapshot) => {
+			if (snapshot.exists()) {
+
+				console.log("get rota: " + JSON.stringify(snapshot.val()));
+				setRota({
+					descricao: snapshot.val().descricao,
+					id: snapshot.val().id,
+					nome: snapshot.val().nome,
+				});
+			}
+		});
+	}
+
+	function getPontos() {
+		get(ref(database, `estado/${usuario.resideEstado.id}/cidade/${usuario.resideCidade.id}/rota/${usuario.rota.id}/ponto`)).then((snapshot) => {
+			if (snapshot.exists()) {
+				const pontos: Ponto[] = [];
+				snapshot.forEach((childSnapshot) => {
+					const ponto = childSnapshot.val();
+					pontos.push({
+						uid: childSnapshot.key,
+						...ponto,
+					});
+				});
+				setPontos(pontos);
+			}
+		});
+	}
+
 	useEffect(() => {
 		getCurrentPosition();
+		if (usuario.resideEstado !== undefined && usuario.resideCidade !== undefined) getRotaUsuario();
 	}, []);
 
-	let text = "Waiting..";
-	if (errorMsg) {
-		text = errorMsg;
-	} else if (location) {
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		text = JSON.stringify(location);
-	}
+	useEffect(() => {
+		console.log("pontos: " + JSON.stringify(pontos));
+	}, [pontos]);
+
+
+	useEffect(() => {
+		if (usuario.resideEstado !== undefined && usuario.resideCidade !== undefined && usuario.rota !== undefined) {
+			getRotaUsuario();
+		}
+	}, [usuario]);
+
+	useEffect(() => {
+		if (rota !== undefined) getPontos();
+	}, [rota]);
 
 	return (
 		<View style={styles.container}>
@@ -62,7 +100,7 @@ export default function Rota({ navigation }: any) {
 
 			<View style={styles.cabecalho}>
 				<Text style={styles.titulo}>
-					Rota UTFPR - DV
+					{rota?.nome ?? "Sem rota definida"}
 				</Text>
 
 				<Text style={styles.texto}>
@@ -82,25 +120,27 @@ export default function Rota({ navigation }: any) {
 				showsScale={true}
 				showsBuildings={true}
 				zoomEnabled={true}
-				onPress={() => {navigation.navigate("Parada de Embarque");}}
+				// onPress={() => { navigation.navigate("Parada de Embarque"); }}
 			>
-				{pontos.map((ponto) => (
-					<Marker
-						key={ponto.uid}
-						coordinate={{
-							latitude: ponto.latitude,
-							longitude: ponto.longitude,
-						}}
-						title={ponto.nome}
-						description={ponto.descricao}
-					>
-						<Callout tooltip>
-							<View>
+				{
+					pontos.map((ponto) => (
+						<Marker
+							key={ponto.uid}
+							coordinate={{
+								latitude: ponto.latitude,
+								longitude: ponto.longitude,
+							}}
+							title={ponto.descricao}
+							description={ponto.descricao}
+						>
+							<Callout tooltip>
+								<View>
 
-							</View>
-						</Callout>
-					</Marker>
-				))}
+								</View>
+							</Callout>
+						</Marker>
+					))
+				}
 			</MapView>
 
 			<Button
