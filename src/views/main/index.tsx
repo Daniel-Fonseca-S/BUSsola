@@ -44,7 +44,7 @@ export default function Mapa({ navigation }: any) {
 	};
 
 	function getRotaUsuario() {
-		get(ref(database, `usuario/${usuario.uid}/rota`)).then((snapshot) => {
+		get(ref(database, `usuario/${usuario?.uid}/rota`)).then((snapshot) => {
 			if (snapshot.exists()) {
 				setRota({
 					descricao: snapshot.val().descricao,
@@ -56,7 +56,7 @@ export default function Mapa({ navigation }: any) {
 	}
 
 	function getPontos() {
-		get(ref(database, `estado/${usuario.resideEstado.id}/cidade/${usuario.resideCidade.id}/rota/${usuario.rota.id}/ponto`)).then((snapshot) => {
+		get(ref(database, `estado/${usuario?.resideEstado.id}/cidade/${usuario?.resideCidade.id}/rota/${usuario?.rota.id}/ponto`)).then((snapshot) => {
 			if (snapshot.exists()) {
 				const pontos: Ponto[] = [];
 				snapshot.forEach((childSnapshot) => {
@@ -73,11 +73,11 @@ export default function Mapa({ navigation }: any) {
 
 	useEffect(() => {
 		getCurrentPosition();
-		if (usuario.resideEstado !== undefined && usuario.resideCidade !== undefined) getRotaUsuario();
+		if (usuario?.resideEstado !== undefined && usuario?.resideCidade !== undefined) getRotaUsuario();
 	}, []);
 
 	useEffect(() => {
-		if (usuario.resideEstado !== undefined && usuario.resideCidade !== undefined && usuario.rota !== undefined) {
+		if (usuario?.resideEstado !== undefined && usuario?.resideCidade !== undefined && usuario?.rota !== undefined) {
 			getRotaUsuario();
 		}
 	}, [usuario]);

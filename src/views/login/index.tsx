@@ -50,6 +50,11 @@ export default function Login({ navigation }: any) {
 		if (auth.currentUser) auth.signOut();
 	});
 
+	useEffect(() => {
+		setUsuario(undefined);
+		setEmail("");
+		setSenha("");
+	}, []);
 
 	return (
 		<KeyboardAvoidingView
