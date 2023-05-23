@@ -1,8 +1,7 @@
 import { Button, Text } from "@react-native-material/core";
 import * as Location from "expo-location";
-import { LocationObject } from "expo-location";
 import { get, getDatabase, ref } from "firebase/database";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Alert, StyleSheet, View } from "react-native";
 import MapView, {
 	Callout,
