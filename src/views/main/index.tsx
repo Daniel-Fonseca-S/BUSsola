@@ -6,9 +6,9 @@ import { Alert, StyleSheet, View } from "react-native";
 import MapView, {
 	Callout,
 	Marker,
-	PROVIDER_GOOGLE,
+	PROVIDER_DEFAULT,
 	Polyline,
-	Region,
+	Region
 } from "react-native-maps";
 import Loading from "src/components/loading";
 import Menu from "src/components/menu";
@@ -182,7 +182,7 @@ export default function Mapa({ navigation }: any) {
 			</View>
 
 			<MapView
-				provider={PROVIDER_GOOGLE}
+				provider={PROVIDER_DEFAULT}
 				style={styles.mapa}
 				region={region}
 				initialRegion={region}
