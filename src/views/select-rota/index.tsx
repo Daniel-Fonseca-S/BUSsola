@@ -20,7 +20,7 @@ export default function SelecionarRota(vai: any) {
 
 	const database = getDatabase();
 
-	const idUsuario: string = usuario.uid;
+	const idUsuario: string | undefined = usuario?.uid;
 
 	async function getCidadeUsuario() {
 		setLoading(true);
@@ -107,13 +107,14 @@ interface propsItemRota {
 function ItemRota(props: propsItemRota) {
 
 	const database = getDatabase();
-	const idUsuario: string = useUsuario().uid;
+	const idUsuario: string | undefined = useUsuario()?.uid;
 	const [loading, setLoading] = React.useState<boolean>(false);
 
 	async function setRotaUsuario() {
 		setLoading(true);
 		await set(ref(database, "usuario/" + idUsuario + "/rota"), props.rota).then(() => {
 			Alert.alert("Rota selecionada com sucesso");
+			props.vai.navigation.navigate("Home");
 		}).catch((error) => {
 			Alert.alert("Erro ao selecionar rota - ", error.message);
 		});

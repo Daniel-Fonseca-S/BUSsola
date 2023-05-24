@@ -1,9 +1,7 @@
-import { Button, Text, TextInput } from "@react-native-material/core";
-import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { useEffect, useState } from "react";
+import Icon from "@expo/vector-icons/MaterialCommunityIcons";
+import { Button, Text, TextInput } from "@react-native-material/core";
 import { KeyboardAvoidingView, StyleSheet, TextInput as Input, View, Alert } from "react-native";
-import firebase from "src/utils/firebase";
-import { getDatabase, ref, set } from "firebase/database";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function RecuperarSenha({ navigation }: any) {
@@ -38,8 +36,6 @@ export default function RecuperarSenha({ navigation }: any) {
 	}, [codigo]);
 
 	//create message box showing the generated code
-
-	const database = getDatabase(firebase);
 
 	return (
 		<KeyboardAvoidingView

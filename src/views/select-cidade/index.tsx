@@ -21,12 +21,12 @@ export default function SelecionarCidade(vai: any) {
 	const dropdownRef = React.useRef<SelectDropdown>(null);
 	const database = getDatabase();
 
-	const idUsuario: string = usuario.uid;
+	const idUsuario: string | undefined = usuario?.uid;
 
 	//inicializa os estados e cidades
 	useEffect(() => {
 		loadEstados();
-		verificarCidadeUsuario(idUsuario);
+		idUsuario && verificarCidadeUsuario(idUsuario);
 	}, []);
 
 	useEffect(() => {

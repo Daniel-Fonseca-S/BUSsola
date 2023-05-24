@@ -67,7 +67,7 @@ export default function Mapa({ navigation }: any) {
 
 	async function getPontos() {
 		setLoading(true);
-		await get(ref(database, `estado/${usuario.resideEstado.id}/cidade/${usuario.resideCidade.id}/rota/${usuario.rota.id}/ponto`)).then((snapshot) => {
+		await get(ref(database, `estado/${usuario?.resideEstado.id}/cidade/${usuario?.resideCidade.id}/rota/${usuario?.rota.id}/ponto`)).then((snapshot) => {
 			if (snapshot.exists()) {
 				const pontos: Ponto[] = [];
 				snapshot.forEach((childSnapshot) => {
