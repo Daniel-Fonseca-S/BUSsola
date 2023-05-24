@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		alignItems: "center",
-		backgroundColor: "#000",
+		backgroundColor: "#1E1E1E",
 		paddingTop: 50
 	},
 	meio: {
