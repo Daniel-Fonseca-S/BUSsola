@@ -26,7 +26,6 @@ export default function Mapa({ navigation }: any) {
 	const [flag, setFlag] = useState<boolean>(false);
 	const [flag2, setFlag2] = useState<boolean>(false);
 	const [busLocation, setBusLocation] = useState<Region>();
-	// const busImage64 = `data:image/png;base64,${usuario?.image}`;
 
 	const database = getDatabase();
 
@@ -35,6 +34,10 @@ export default function Mapa({ navigation }: any) {
 		getCurrentPosition();
 		if (usuario?.resideEstado !== undefined && usuario?.resideCidade !== undefined) getRotaUsuario();
 		else setLoading(false);
+		setBusLocation(undefined);
+		setLoading(false);
+		setFlag(!flag);
+		setFlag2(!flag2);
 	}, []);
 
 	useEffect(() => {
@@ -44,7 +47,10 @@ export default function Mapa({ navigation }: any) {
 	}, [usuario]);
 
 	useEffect(() => {
-		if (rota !== undefined) getPontos();
+		if (rota !== undefined) {
+			setBusLocation(undefined);
+			getPontos();
+		}
 	}, [rota]);
 
 	useEffect(() => {
@@ -134,6 +140,9 @@ export default function Mapa({ navigation }: any) {
 				setPontos(pontos);
 				setLoading(false);
 			}
+		}).then(() => {
+			setFlag(!flag);
+			setFlag2(!flag2);
 		}).catch(() => {
 			Alert.alert("Ops!", "Não foi possível carregar os pontos.");
 			setLoading(false);
@@ -196,8 +205,7 @@ export default function Mapa({ navigation }: any) {
 						title="Ônibus"
 						description="Localização do ônibus"
 						pinColor="#8D28FF"
-					// image={usuario?.image ? { uri: busImage64 } : undefined}
-					// style={{ maxWidth: 3 }}
+						image={require("src/assets/icons/bus.png") ?? undefined}
 					>
 						<Callout tooltip />
 					</Marker>
