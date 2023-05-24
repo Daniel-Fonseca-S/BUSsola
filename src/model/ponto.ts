@@ -6,5 +6,6 @@ export default interface Ponto {
     descricao: string;
     rua: string;
     bairro: string;
+    observacao: string;
     imagem?: string;
 }
