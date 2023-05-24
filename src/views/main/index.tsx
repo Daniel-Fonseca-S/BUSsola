@@ -9,6 +9,7 @@ import MapView, {
 	PROVIDER_GOOGLE,
 	Region,
 } from "react-native-maps";
+import Loading from "src/components/loading";
 import Menu from "src/components/menu";
 import Ponto from "src/model/ponto";
 import Rota from "src/model/rota";
@@ -27,6 +28,7 @@ export default function Mapa({ navigation }: any) {
 	const [pontos, setPontos] = useState<Ponto[]>([]);
 	const [rota, setRota] = useState<Rota | undefined>();
 	const usuario = useUsuario();
+	const [loading, setLoading] = useState(false);
 
 	const database = getDatabase();
 
@@ -44,21 +46,24 @@ export default function Mapa({ navigation }: any) {
 	};
 
 	function getRotaUsuario() {
-		get(ref(database, `usuario/${usuario.uid}/rota`)).then((snapshot) => {
+		setLoading(true);
+		get(ref(database, `usuario/${usuario?.uid}/rota`)).then((snapshot) => {
 			if (snapshot.exists()) {
-
-				console.log("get rota: " + JSON.stringify(snapshot.val()));
 				setRota({
 					descricao: snapshot.val().descricao,
 					id: snapshot.val().id,
 					nome: snapshot.val().nome,
 				});
 			}
+		}).catch((error) => {
+			console.error(error);
+			setLoading(false);
 		});
 	}
 
 	function getPontos() {
-		get(ref(database, `estado/${usuario.resideEstado.id}/cidade/${usuario.resideCidade.id}/rota/${usuario.rota.id}/ponto`)).then((snapshot) => {
+		setLoading(true);
+		get(ref(database, `estado/${usuario?.resideEstado.id}/cidade/${usuario?.resideCidade.id}/rota/${usuario?.rota.id}/ponto`)).then((snapshot) => {
 			if (snapshot.exists()) {
 				const pontos: Ponto[] = [];
 				snapshot.forEach((childSnapshot) => {
@@ -69,22 +74,23 @@ export default function Mapa({ navigation }: any) {
 					});
 				});
 				setPontos(pontos);
+				setLoading(false);
 			}
+		}).catch(() => {
+			Alert.alert("Ops!", "Não foi possível carregar os pontos.");
+			setLoading(false);
 		});
 	}
 
 	useEffect(() => {
+		setLoading(true);
 		getCurrentPosition();
-		if (usuario.resideEstado !== undefined && usuario.resideCidade !== undefined) getRotaUsuario();
+		if (usuario?.resideEstado !== undefined && usuario?.resideCidade !== undefined) getRotaUsuario();
+		else setLoading(false);
 	}, []);
 
 	useEffect(() => {
-		console.log("pontos: " + JSON.stringify(pontos));
-	}, [pontos]);
-
-
-	useEffect(() => {
-		if (usuario.resideEstado !== undefined && usuario.resideCidade !== undefined && usuario.rota !== undefined) {
+		if (usuario?.resideEstado !== undefined && usuario?.resideCidade !== undefined && usuario?.rota !== undefined) {
 			getRotaUsuario();
 		}
 	}, [usuario]);
@@ -96,10 +102,11 @@ export default function Mapa({ navigation }: any) {
 	return (
 		<View style={styles.container}>
 			<Menu />
+			<Loading carregando={loading} />
 
 			<View style={styles.cabecalho}>
 				<Text style={styles.titulo}>
-					{rota?.nome ?? "Sem rota definida"}
+					Rota: {rota?.nome ?? "Sem rota definida"}
 				</Text>
 
 				<Text style={styles.texto}>
@@ -119,7 +126,6 @@ export default function Mapa({ navigation }: any) {
 				showsScale={true}
 				showsBuildings={true}
 				zoomEnabled={true}
-				// onPress={() => { navigation.navigate("Parada de Embarque"); }}
 			>
 				{
 					pontos.map((ponto) => (
@@ -130,7 +136,8 @@ export default function Mapa({ navigation }: any) {
 								longitude: ponto.longitude,
 							}}
 							title={ponto.descricao}
-							description={ponto.descricao}
+							description={ponto.bairro + " - " + ponto.rua}
+							pinColor="#fff600"
 							onPress={
 								() => { 
 									navigation.navigate("Parada de Embarque", {
@@ -139,11 +146,7 @@ export default function Mapa({ navigation }: any) {
 								}
 							}
 						>
-							<Callout tooltip>
-								<View>
-
-								</View>
-							</Callout>
+							<Callout tooltip />
 						</Marker>
 					))
 				}
@@ -187,6 +190,7 @@ const styles = StyleSheet.create({
 	titulo: {
 		fontSize: 30,
 		color: "#8D28FF",
+		alignSelf: "center",
 		fontWeight: "bold",
 	},
 	texto: {

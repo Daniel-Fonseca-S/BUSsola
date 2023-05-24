@@ -8,5 +8,5 @@ export const usuarioState = atom({
 		email: "",
 		image: "",
 		telefone: ""
-	} as Usuario
+	} as Usuario | undefined
 });

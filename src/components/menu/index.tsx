@@ -9,7 +9,7 @@ import useUsuario from "src/utils/hooks/useUsuario";
 export default function Menu() {
 	const [menuAtivo, setMenuAtivo] = useState(false);
 	const usuario = useUsuario();
-	const base64Image = `data:image/png;base64,${usuario.image}`;
+	const base64Image = `data:image/png;base64,${usuario?.image}`;
 
 	return (
 		<View style={styles.container}>
@@ -28,15 +28,15 @@ export default function Menu() {
 							<Image source={require("src/assets/icons/close.png")} style={menuAtivo ? styles.closeIcon : styles.disabled} />
 						</TouchableOpacity>
 						<View style={styles.userImage}>
-							{usuario.image === "" ?
+							{usuario?.image === "" ?
 								<Image source={require("src/assets/icons/user.png")} style={{ width: 100, height: 100, borderRadius: 50 }} />
 								:
 								<Image source={{ uri: base64Image }} style={{ width: 100, height: 100, borderRadius: 50 }} />
 							}
 						</View>
 						<View style={styles.userInfo}>
-							<Text>{usuario.email}</Text>
-							<Text>Cidade: {usuario.resideCidade?.nome ? usuario.resideCidade?.nome : "Não definida"}</Text>
+							<Text>{usuario?.email}</Text>
+							<Text>Cidade: {usuario?.resideCidade?.nome ? usuario?.resideCidade?.nome : "Não definida"}</Text>
 						</View>
 						<View style={styles.routes}>
 							{routes.map((route) => (
