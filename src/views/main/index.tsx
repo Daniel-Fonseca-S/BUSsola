@@ -139,6 +139,13 @@ export default function Mapa({ navigation }: any) {
 							title={ponto.descricao}
 							description={ponto.bairro + " - " + ponto.rua}
 							pinColor="#fff600"
+							onPress={
+								() => { 
+									navigation.navigate("Parada de Embarque", {
+										ponto,
+									}); 
+								}
+							}
 						>
 							<Callout tooltip />
 						</Marker>
@@ -173,7 +180,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		alignItems: "center",
 		justifyContent: "space-between",
-		backgroundColor: "#000",
+		backgroundColor: "#1E1E1E",
 		paddingBottom: 50,
 	},
 	meio: {
