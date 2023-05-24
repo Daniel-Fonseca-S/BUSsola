@@ -43,7 +43,7 @@ export default function Loading(props: LoadingProps) {
 				left: "50%",
 				marginTop: -25,
 				marginLeft: -25,
-				opacity: props.carregando ? 1 : 0
+				display: props.carregando ? "flex" : "none"
 			}}
 		>
 			<Animated.Image

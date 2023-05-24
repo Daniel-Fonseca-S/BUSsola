@@ -42,7 +42,8 @@ export default function Login({ navigation }: any) {
 
 	useEffect(() => {
 		const auth = getAuth();
-		if (auth.currentUser) auth.signOut();
+		if (auth.currentUser) auth.signOut()
+			.catch((error) => console.log(error));
 	}, []);
 
 	useEffect(() => {
@@ -90,13 +91,13 @@ export default function Login({ navigation }: any) {
 
 				<Loading carregando={carregando} />
 
-				<TouchableOpacity onPress={() => navigation.navigate("Recuperar Senha")}>
+				<TouchableOpacity onPress={() => navigation.navigate("Recuperar Senha")} disabled={carregando}>
 					<Text style={styles.texto}>
 						Esqueceu sua senha?
 					</Text>
 				</TouchableOpacity>
 
-				<TouchableOpacity onPress={() => navigation.navigate("Cadastro")}>
+				<TouchableOpacity onPress={() => navigation.navigate("Cadastro")} disabled={carregando}>
 					<Text style={styles.texto}>
 						Não tem uma conta?
 					</Text>
@@ -106,7 +107,7 @@ export default function Login({ navigation }: any) {
 			<Button
 				title={"Login"}
 				style={styles.botao}
-				disabled={email.length === 0 || senha.length === 0}
+				disabled={email.length === 0 || senha.length === 0 || carregando}
 				onPress={login}
 				trailing={props => <Icon name="login" {...props} />}
 			/>
