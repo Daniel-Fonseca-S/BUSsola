@@ -126,7 +126,6 @@ export default function Mapa({ navigation }: any) {
 				showsScale={true}
 				showsBuildings={true}
 				zoomEnabled={true}
-			// onPress={() => { navigation.navigate("Parada de Embarque"); }}
 			>
 				{
 					pontos.map((ponto) => (
@@ -137,7 +136,8 @@ export default function Mapa({ navigation }: any) {
 								longitude: ponto.longitude,
 							}}
 							title={ponto.descricao}
-							description={ponto.descricao}
+							description={ponto.bairro + " - " + ponto.rua}
+							pinColor="#fff600"
 						>
 							<Callout tooltip />
 						</Marker>
