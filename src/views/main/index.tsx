@@ -35,9 +35,9 @@ export default function Mapa({ navigation }: any) {
 		if (usuario?.resideEstado !== undefined && usuario?.resideCidade !== undefined) getRotaUsuario();
 		else setLoading(false);
 		setBusLocation(undefined);
-		setLoading(false);
 		setFlag(!flag);
 		setFlag2(!flag2);
+		setLoading(false);
 	}, []);
 
 	useEffect(() => {
@@ -48,7 +48,6 @@ export default function Mapa({ navigation }: any) {
 
 	useEffect(() => {
 		if (rota !== undefined) {
-			setBusLocation(undefined);
 			getPontos();
 		}
 	}, [rota]);
@@ -141,6 +140,7 @@ export default function Mapa({ navigation }: any) {
 				setLoading(false);
 			}
 		}).then(() => {
+			setBusLocation(undefined);
 			setFlag(!flag);
 			setFlag2(!flag2);
 		}).catch(() => {
