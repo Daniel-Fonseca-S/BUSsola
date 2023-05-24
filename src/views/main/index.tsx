@@ -29,11 +29,12 @@ export default function Mapa({ navigation }: any) {
 	const [pontos, setPontos] = useState<Ponto[]>([]);
 	const [rota, setRota] = useState<Rota | undefined>();
 	const usuario = useUsuario();
-	const [loading, setLoading] = useState(false);
+	const [loading, setLoading] = useState<boolean>(false);
 
 	const database = getDatabase();
 
 	const getCurrentPosition = async () => {
+		setLoading(true);
 		const { status } = await Location.requestForegroundPermissionsAsync();
 
 		if (status !== "granted")
@@ -44,11 +45,12 @@ export default function Mapa({ navigation }: any) {
 		} = await Location.getCurrentPositionAsync();
 
 		setRegion({ latitude, longitude, latitudeDelta: 100, longitudeDelta: 100 });
+		setLoading(false);
 	};
 
-	function getRotaUsuario() {
+	async function getRotaUsuario() {
 		setLoading(true);
-		get(ref(database, `usuario/${usuario?.uid}/rota`)).then((snapshot) => {
+		await get(ref(database, `usuario/${usuario?.uid}/rota`)).then((snapshot) => {
 			if (snapshot.exists()) {
 				setRota({
 					descricao: snapshot.val().descricao,
@@ -60,11 +62,12 @@ export default function Mapa({ navigation }: any) {
 			console.error(error);
 			setLoading(false);
 		});
+		setLoading(false);
 	}
 
-	function getPontos() {
+	async function getPontos() {
 		setLoading(true);
-		get(ref(database, `estado/${usuario?.resideEstado.id}/cidade/${usuario?.resideCidade.id}/rota/${usuario?.rota.id}/ponto`)).then((snapshot) => {
+		await get(ref(database, `estado/${usuario?.resideEstado.id}/cidade/${usuario?.resideCidade.id}/rota/${usuario?.rota.id}/ponto`)).then((snapshot) => {
 			if (snapshot.exists()) {
 				const pontos: Ponto[] = [];
 				snapshot.forEach((childSnapshot) => {
@@ -81,6 +84,7 @@ export default function Mapa({ navigation }: any) {
 			Alert.alert("Ops!", "Não foi possível carregar os pontos.");
 			setLoading(false);
 		});
+		setLoading(false);
 	}
 
 	useEffect(() => {
@@ -140,10 +144,10 @@ export default function Mapa({ navigation }: any) {
 							description={ponto.bairro + " - " + ponto.rua}
 							pinColor="#fff600"
 							onPress={
-								() => { 
+								() => {
 									navigation.navigate("Parada de Embarque", {
 										ponto,
-									}); 
+									});
 								}
 							}
 						>
