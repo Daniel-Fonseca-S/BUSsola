@@ -7,6 +7,8 @@ export const usuarioState = atom({
 		uid: "",
 		email: "",
 		image: "",
-		telefone: ""
+		telefone: "",
+		rota: {},
+		onibus: false
 	} as Usuario | undefined
 });
