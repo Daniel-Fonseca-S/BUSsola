@@ -176,7 +176,7 @@ export default function SelecionarCidade(vai: any) {
 const styles = StyleSheet.create({
 	visao: {
 		flex: 1,
-		backgroundColor: "#000",
+		backgroundColor: "#1E1E1E",
 		alignItems: "center",
 		padding: 10,
 	},

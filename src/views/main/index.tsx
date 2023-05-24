@@ -7,6 +7,7 @@ import MapView, {
 	Callout,
 	Marker,
 	PROVIDER_GOOGLE,
+	Polyline,
 	Region,
 } from "react-native-maps";
 import Loading from "src/components/loading";
@@ -49,7 +50,7 @@ export default function Mapa({ navigation }: any) {
 
 	async function getRotaUsuario() {
 		setLoading(true);
-		await get(ref(database, `usuario/${usuario.uid}/rota`)).then((snapshot) => {
+		await get(ref(database, `usuario/${usuario?.uid}/rota`)).then((snapshot) => {
 			if (snapshot.exists()) {
 				setRota({
 					descricao: snapshot.val().descricao,
@@ -57,6 +58,9 @@ export default function Mapa({ navigation }: any) {
 					nome: snapshot.val().nome,
 				});
 			}
+		}).catch((error) => {
+			console.error(error);
+			setLoading(false);
 		});
 		setLoading(false);
 	}
@@ -74,18 +78,24 @@ export default function Mapa({ navigation }: any) {
 					});
 				});
 				setPontos(pontos);
+				setLoading(false);
 			}
+		}).catch(() => {
+			Alert.alert("Ops!", "Não foi possível carregar os pontos.");
+			setLoading(false);
 		});
 		setLoading(false);
 	}
 
 	useEffect(() => {
+		setLoading(true);
 		getCurrentPosition();
-		if (usuario.resideEstado !== undefined && usuario.resideCidade !== undefined) getRotaUsuario();
+		if (usuario?.resideEstado !== undefined && usuario?.resideCidade !== undefined) getRotaUsuario();
+		else setLoading(false);
 	}, []);
 
 	useEffect(() => {
-		if (usuario.resideEstado !== undefined && usuario.resideCidade !== undefined && usuario.rota !== undefined) {
+		if (usuario?.resideEstado !== undefined && usuario?.resideCidade !== undefined && usuario?.rota !== undefined) {
 			getRotaUsuario();
 		}
 	}, [usuario]);
@@ -98,6 +108,7 @@ export default function Mapa({ navigation }: any) {
 		<View style={styles.container}>
 			<Menu />
 			<Loading carregando={loading} />
+
 			<View style={styles.cabecalho}>
 				<Text style={styles.titulo}>
 					Rota: {rota?.nome ?? "Sem rota definida"}
@@ -120,7 +131,6 @@ export default function Mapa({ navigation }: any) {
 				showsScale={true}
 				showsBuildings={true}
 				zoomEnabled={true}
-			// onPress={() => { navigation.navigate("Parada de Embarque"); }}
 			>
 				{
 					pontos.map((ponto) => (
@@ -131,11 +141,31 @@ export default function Mapa({ navigation }: any) {
 								longitude: ponto.longitude,
 							}}
 							title={ponto.descricao}
-							description={ponto.descricao}
+							description={ponto.bairro + " - " + ponto.rua}
+							pinColor="#fff600"
+							onPress={
+								() => {
+									navigation.navigate("Parada de Embarque", {
+										ponto,
+									});
+								}
+							}
 						>
 							<Callout tooltip />
 						</Marker>
 					))
+				}
+				{
+					pontos.length > 1 &&
+					<Polyline
+						coordinates={pontos.map((ponto) => ({
+							latitude: ponto.latitude,
+							longitude: ponto.longitude,
+						}))}
+						strokeColor="#fff600"
+						strokeWidth={3}
+						fillColor="#fff600"
+					/>
 				}
 			</MapView>
 
@@ -154,7 +184,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		alignItems: "center",
 		justifyContent: "space-between",
-		backgroundColor: "#000",
+		backgroundColor: "#1E1E1E",
 		paddingBottom: 50,
 	},
 	meio: {

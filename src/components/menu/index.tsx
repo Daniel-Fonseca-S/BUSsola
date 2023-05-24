@@ -1,5 +1,6 @@
 import React from "react";
 import { useState } from "react";
+import Loading from "../loading";
 import firebase from "src/utils/firebase";
 import { routes } from "../../utils/routes";
 import * as ImagePicker from "expo-image-picker";
@@ -7,14 +8,13 @@ import useUsuario from "src/utils/hooks/useUsuario";
 import { getDatabase, ref, update } from "firebase/database";
 import { navigationPop, navigationPush } from "src/utils/navigationFun";
 import { Image, Modal, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import Loading from "../loading";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function Menu() {
 	const usuario = useUsuario();
 	const [loading, setLoading] = useState(false);
 	const [menuAtivo, setMenuAtivo] = useState(false);
-	const base64Image = `data:image/png;base64,${usuario.image}`;
+	const base64Image = `data:image/png;base64,${usuario?.image}`;
 
 	const database = getDatabase(firebase);
 
@@ -31,7 +31,7 @@ export default function Menu() {
 
 		if (!result.canceled) {
 			if (result.assets[0].base64 != undefined) {
-				await update(ref(database, "usuario/" + usuario.uid), {
+				await update(ref(database, "usuario/" + usuario?.uid), {
 					image: result.assets[0].base64,
 				});
 			}
@@ -60,15 +60,15 @@ export default function Menu() {
 							<Image source={require("src/assets/icons/close.png")} style={menuAtivo ? styles.closeIcon : styles.disabled} />
 						</TouchableOpacity>
 						<TouchableOpacity style={styles.userImage} onPress={() => pickImage()} disabled={loading}>
-							{usuario.image === "" ?
+							{usuario?.image === "" ?
 								<Image source={require("src/assets/icons/user.png")} style={{ width: 100, height: 100, borderRadius: 50 }} />
 								:
 								<Image source={{ uri: base64Image }} style={{ width: 100, height: 100, borderRadius: 50 }} />
 							}
 						</TouchableOpacity>
 						<View style={styles.userInfo}>
-							<Text>{usuario.email}</Text>
-							<Text>Cidade: {usuario.resideCidade?.nome ? usuario.resideCidade?.nome : "Não definida"}</Text>
+							<Text>{usuario?.email}</Text>
+							<Text>Cidade: {usuario?.resideCidade?.nome ? usuario?.resideCidade?.nome : "Não definida"}</Text>
 						</View>
 						<View style={styles.routes}>
 							{routes.map((route) => (

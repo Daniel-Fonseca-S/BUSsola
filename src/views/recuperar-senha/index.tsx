@@ -25,7 +25,7 @@ export default function RecuperarSenha({ navigation }: any) {
 		for (let i = 0; i < 6; i++) {
 			codigo += Math.floor(Math.random() * 10).toString();
 		}
-		console.log("codigo: " + codigo)
+		console.log("codigo: " + codigo);
 		setCodigo(codigo);
 	};
 
@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		alignItems: "center",
-		backgroundColor: "#000",
+		backgroundColor: "#1E1E1E",
 		paddingVertical: 50,
 	},
 	titulo: {

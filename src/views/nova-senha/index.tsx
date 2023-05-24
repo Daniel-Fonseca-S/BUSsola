@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		alignItems: "center",
 		justifyContent: "space-around",
-		backgroundColor: "#000",
+		backgroundColor: "#1E1E1E",
 		paddingVertical: 50,
 	},
 	meio: {

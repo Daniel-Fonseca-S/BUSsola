@@ -45,6 +45,11 @@ export default function Login({ navigation }: any) {
 		if (auth.currentUser) auth.signOut();
 	}, []);
 
+	useEffect(() => {
+		setUsuario(undefined);
+		setEmail("");
+		setSenha("");
+	}, []);
 
 	return (
 		<KeyboardAvoidingView
@@ -114,8 +119,9 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		alignItems: "center",
-		backgroundColor: "#000",
-		paddingTop: 50
+		backgroundColor: "#1E1E1E",
+		paddingTop: 50,
+		height: "100%",
 	},
 	meio: {
 		width: "100%",
