@@ -44,7 +44,7 @@ export default function ParadaEmbarque({ navigation }: any) {
 					style={styles.button} 
 					title="Algo está errado?"
 					contentContainerStyle={{height: 50}}
-					onPress={() => {navigation.navigate("Log Out"); }}/>
+					onPress={() => {navigation.navigate("Enviar Sugestao"); }}/>
 			</View>
 		</SafeAreaView>
 	);
