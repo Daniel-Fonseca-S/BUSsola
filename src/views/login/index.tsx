@@ -2,6 +2,7 @@ import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { Button, IconButton, Stack, Text, TextInput } from "@react-native-material/core";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { child, get, getDatabase, ref } from "firebase/database";
+import React from "react";
 import { useEffect, useState } from "react";
 import { Alert, Image, KeyboardAvoidingView, StyleSheet, TouchableOpacity } from "react-native";
 import Loading from "src/components/loading";
@@ -31,10 +32,11 @@ export default function Login({ navigation }: any) {
 				setCarregando(false);
 				navigation.navigate("Home");
 				if (auth.currentUser)
-					get(child(ref(database), "usuario/" + auth.currentUser.uid)).then((snapshot) => {
-						if (snapshot.exists()) setUsuario({ ...snapshot.val(), uid: snapshot.key } as Usuario);
-						else console.log("No data available");
-					})
+					get(child(ref(database), "usuario/" + auth.currentUser.uid))
+						.then((snapshot) => {
+							if (snapshot.exists()) setUsuario({ ...snapshot.val(), uid: snapshot.key } as Usuario);
+							else console.log("No data available");
+						})
 						.catch((error) => {
 							console.error(error);
 						});

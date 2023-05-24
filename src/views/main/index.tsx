@@ -7,6 +7,7 @@ import MapView, {
 	Callout,
 	Marker,
 	PROVIDER_GOOGLE,
+	Polyline,
 	Region,
 } from "react-native-maps";
 import Loading from "src/components/loading";
@@ -142,6 +143,18 @@ export default function Mapa({ navigation }: any) {
 							<Callout tooltip />
 						</Marker>
 					))
+				}
+				{
+					pontos.length > 1 &&
+					<Polyline
+						coordinates={pontos.map((ponto) => ({
+							latitude: ponto.latitude,
+							longitude: ponto.longitude,
+						}))}
+						strokeColor="#fff600"
+						strokeWidth={3}
+						fillColor="#fff600"
+					/>
 				}
 			</MapView>
 
