@@ -42,7 +42,8 @@ export default function Login({ navigation }: any) {
 
 	useEffect(() => {
 		const auth = getAuth();
-		if (auth.currentUser) auth.signOut();
+		if (auth.currentUser) auth.signOut()
+			.catch((error) => console.log(error));
 	}, []);
 
 	useEffect(() => {
