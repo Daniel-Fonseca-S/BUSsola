@@ -1,15 +1,35 @@
-import React from "react";
+import React, { useState } from "react";
 import {Button, TextInput, Text } from "@react-native-material/core";
-import {View } from "react-native";
+import { child, get, getDatabase, ref, set, update } from "firebase/database";
+import {Alert, View } from "react-native";
 import style from "../cadastro/style";
+import useUsuario from "src/utils/hooks/useUsuario"
 import Menu from "src/components/menu";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function EnviarSugestao({ navigation }: any){
-
+    const [sugestao, setSugestao] = useState("")
+    const [loading, setLoading] = React.useState<boolean>(false);
     const styles = style;
-    //const database = getDatabase(firebase);
+    const usuario = useUsuario();
+    const database = getDatabase();
 
+    const idUsuario: string | undefined = usuario?.uid;
+
+    async function setSugestaoDb() {
+		setLoading(true);
+		await set(ref(database, "observacao/" + idUsuario + new Date().toISOString().replace(".", "")), {
+			sugestao
+		}).then(() => {
+			Alert.alert("observação enviada com sucesso!");
+            console.log(sugestao)
+			setLoading(false);
+		}).catch((error) => {
+			Alert.alert("Erro ao enviar observação!", error.message);
+			setLoading(false);
+            
+		});
+	}
     return(
         <View style={styles.container}>
             <View style={styles.content}>
@@ -34,6 +54,7 @@ export default function EnviarSugestao({ navigation }: any){
                     <TextInput     
                         style={styles.textInput}
                         keyboardType="default"
+                        onChangeText={((text: string) => setSugestao(text))}  //???
                     />
                 </View>
                 <View style={styles.content}>
@@ -49,7 +70,12 @@ export default function EnviarSugestao({ navigation }: any){
 					style={styles.button} 
 					title="Enviar"
 					contentContainerStyle={{height: 50}}
-					onPress={() => {navigation.navigate("Home");}}/>
+					onPress={() => {
+                        setLoading(true);
+                        setSugestaoDb();
+                        setSugestao("");
+                        navigation.goBack();
+                    }}/>
 			</View>
         </View>
     )
