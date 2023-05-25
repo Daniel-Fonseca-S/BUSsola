@@ -8,13 +8,17 @@ import Menu from "src/components/menu";
 export default function ParadaEmbarque({ route, navigation }: any) {
 	const styles = style;
 	const ponto = route.params.ponto;
-
+	
 	return (
 		<SafeAreaView style={styles.container}>
 			<View style={styles.content}>
 				<Menu></Menu>
 				<View style={{ marginHorizontal: 70, alignItems: "center", flexDirection: "row" }}>
-					<Image style={styles.image} source={require("../../../assets/stock-image-parada.jpg")}></Image>
+					{ponto.imagem == "" ?  
+						<Image style={styles.image} source={require("../../../assets/stock-image-parada.jpg")}></Image>
+						:
+						<Image style={styles.image} source={{uri: `data:image/png;base64,${ponto.imagem}`}}></Image>
+					}
 					<View style={{ marginLeft: 20, width: "70%" }}>
 						<Text style={{ fontSize: 25, color: "#B7B7B7", marginBottom: 10 }}>{ponto.descricao}</Text>
 						<Text style={{ fontSize: 20, color: "#8C938D", marginBottom: 5 }}>{ponto.rua}</Text>
