@@ -1,13 +1,14 @@
 import { Button, Text } from "@react-native-material/core";
 import * as Location from "expo-location";
-import { get, getDatabase, ref } from "firebase/database";
+import { get, getDatabase, ref, set } from "firebase/database";
 import { useEffect, useState } from "react";
 import { Alert, StyleSheet, View } from "react-native";
 import MapView, {
 	Callout,
 	Marker,
-	PROVIDER_GOOGLE,
-	Region,
+	PROVIDER_DEFAULT,
+	Polyline,
+	Region
 } from "react-native-maps";
 import Loading from "src/components/loading";
 import Menu from "src/components/menu";
@@ -15,24 +16,84 @@ import Ponto from "src/model/ponto";
 import Rota from "src/model/rota";
 import useUsuario from "src/utils/hooks/useUsuario";
 
-const initialRegion = {
-	latitude: -25.443195,
-	longitude: -49.280977,
-	latitudeDelta: 0.0922,
-	longitudeDelta: 0.0421,
-};
-
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function Mapa({ navigation }: any) {
+	const usuario = useUsuario();
 	const [region, setRegion] = useState<Region>();
 	const [pontos, setPontos] = useState<Ponto[]>([]);
 	const [rota, setRota] = useState<Rota | undefined>();
-	const usuario = useUsuario();
-	const [loading, setLoading] = useState(false);
+	const [loading, setLoading] = useState<boolean>(false);
+	const [flag, setFlag] = useState<boolean>(false);
+	const [flag2, setFlag2] = useState<boolean>(false);
+	const [busLocation, setBusLocation] = useState<Region>();
 
 	const database = getDatabase();
 
+	useEffect(() => {
+		setLoading(true);
+		getCurrentPosition();
+		if (usuario?.resideEstado !== undefined && usuario?.resideCidade !== undefined) getRotaUsuario();
+		else setLoading(false);
+		setBusLocation(undefined);
+		setFlag(!flag);
+		setFlag2(!flag2);
+		setLoading(false);
+	}, []);
+
+	useEffect(() => {
+		if (usuario?.resideEstado !== undefined && usuario?.resideCidade !== undefined && usuario?.rota !== undefined) {
+			getRotaUsuario();
+		}
+	}, [usuario]);
+
+	useEffect(() => {
+		if (rota !== undefined) {
+			getPontos();
+		}
+	}, [rota]);
+
+	useEffect(() => {
+		if (usuario?.onibus !== undefined && usuario?.onibus === true) {
+			if (usuario.rota?.id !== undefined) {
+				setTimeout(() => {
+					setBusCurrentLocation();
+					setFlag(!flag);
+				}, 3000);
+			}
+		}
+	}, [flag]);
+
+	useEffect(() => {
+		if (usuario?.onibus === undefined || usuario?.onibus === false) {
+			if (usuario?.rota?.id !== undefined) {
+				setTimeout(() => {
+					getOnibusLocation();
+					setFlag2(!flag2);
+				}, 3000);
+			}
+		}
+	}, [flag2]);
+
+	async function setBusCurrentLocation() {
+		setLoading(true);
+		if (usuario?.onibus === true) {
+			if (region !== undefined) {
+				await set(ref(database, `estado/${usuario?.resideEstado?.id}/cidade/${usuario?.resideCidade?.id}/rota/${usuario?.rota?.id}/onibus/`), {
+					latitude: region?.latitude,
+					longitude: region?.longitude,
+				}).then(() => {
+					console.log("Data set.");
+				}
+				).catch((error) => {
+					console.error(error);
+				}
+				);
+			}
+		}
+	}
+
 	const getCurrentPosition = async () => {
+		setLoading(true);
 		const { status } = await Location.requestForegroundPermissionsAsync();
 
 		if (status !== "granted")
@@ -42,12 +103,13 @@ export default function Mapa({ navigation }: any) {
 			coords: { latitude, longitude },
 		} = await Location.getCurrentPositionAsync();
 
-		setRegion({ latitude, longitude, latitudeDelta: 100, longitudeDelta: 100 });
+		setRegion({ latitude, longitude, latitudeDelta: 0.0922, longitudeDelta: 0.0421 });
+		setLoading(false);
 	};
 
-	function getRotaUsuario() {
+	async function getRotaUsuario() {
 		setLoading(true);
-		get(ref(database, `usuario/${usuario?.uid}/rota`)).then((snapshot) => {
+		await get(ref(database, `usuario/${usuario?.uid}/rota`)).then((snapshot) => {
 			if (snapshot.exists()) {
 				setRota({
 					descricao: snapshot.val().descricao,
@@ -59,11 +121,12 @@ export default function Mapa({ navigation }: any) {
 			console.error(error);
 			setLoading(false);
 		});
+		setLoading(false);
 	}
 
-	function getPontos() {
+	async function getPontos() {
 		setLoading(true);
-		get(ref(database, `estado/${usuario?.resideEstado.id}/cidade/${usuario?.resideCidade.id}/rota/${usuario?.rota.id}/ponto`)).then((snapshot) => {
+		await get(ref(database, `estado/${usuario?.resideEstado?.id}/cidade/${usuario?.resideCidade?.id}/rota/${usuario?.rota?.id}/ponto`)).then((snapshot) => {
 			if (snapshot.exists()) {
 				const pontos: Ponto[] = [];
 				snapshot.forEach((childSnapshot) => {
@@ -76,28 +139,32 @@ export default function Mapa({ navigation }: any) {
 				setPontos(pontos);
 				setLoading(false);
 			}
+		}).then(() => {
+			setBusLocation(undefined);
+			setFlag(!flag);
+			setFlag2(!flag2);
 		}).catch(() => {
 			Alert.alert("Ops!", "Não foi possível carregar os pontos.");
 			setLoading(false);
 		});
+		setLoading(false);
 	}
 
-	useEffect(() => {
-		setLoading(true);
-		getCurrentPosition();
-		if (usuario?.resideEstado !== undefined && usuario?.resideCidade !== undefined) getRotaUsuario();
-		else setLoading(false);
-	}, []);
-
-	useEffect(() => {
-		if (usuario?.resideEstado !== undefined && usuario?.resideCidade !== undefined && usuario?.rota !== undefined) {
-			getRotaUsuario();
+	async function getOnibusLocation() {
+		if (usuario?.onibus === false || usuario?.onibus === undefined) {
+			await get(ref(database, `estado/${usuario?.resideEstado?.id}/cidade/${usuario?.resideCidade?.id}/rota/${usuario?.rota?.id}/onibus/`)).then((snapshot) => {
+				if (snapshot.exists()) {
+					const onibusLatitude = snapshot.val().latitude;
+					const onibusLongitude = snapshot.val().longitude;
+					setBusLocation({ latitude: onibusLatitude, longitude: onibusLongitude, latitudeDelta: 0.0922, longitudeDelta: 0.0421 });
+					console.log(busLocation);
+				}
+			}
+			).catch((error) => {
+				console.error(error);
+			});
 		}
-	}, [usuario]);
-
-	useEffect(() => {
-		if (rota !== undefined) getPontos();
-	}, [rota]);
+	}
 
 	return (
 		<View style={styles.container}>
@@ -115,10 +182,10 @@ export default function Mapa({ navigation }: any) {
 			</View>
 
 			<MapView
-				provider={PROVIDER_GOOGLE}
+				provider={PROVIDER_DEFAULT}
 				style={styles.mapa}
 				region={region}
-				initialRegion={initialRegion}
+				initialRegion={region}
 				key={region?.latitude?.toString()}
 				showsUserLocation={true}
 				showsMyLocationButton={true}
@@ -126,7 +193,23 @@ export default function Mapa({ navigation }: any) {
 				showsScale={true}
 				showsBuildings={true}
 				zoomEnabled={true}
+				followsUserLocation={true}
 			>
+				{
+					busLocation !== undefined &&
+					<Marker
+						coordinate={{
+							latitude: busLocation.latitude,
+							longitude: busLocation.longitude,
+						}}
+						title="Ônibus"
+						description="Localização do ônibus"
+						pinColor="#8D28FF"
+						image={require("src/assets/icons/bus.png") ?? undefined}
+					>
+						<Callout tooltip />
+					</Marker>
+				}
 				{
 					pontos.map((ponto) => (
 						<Marker
@@ -139,16 +222,28 @@ export default function Mapa({ navigation }: any) {
 							description={ponto.bairro + " - " + ponto.rua}
 							pinColor="#fff600"
 							onPress={
-								() => { 
+								() => {
 									navigation.navigate("Parada de Embarque", {
 										ponto,
-									}); 
+									});
 								}
 							}
 						>
 							<Callout tooltip />
 						</Marker>
 					))
+				}
+				{
+					pontos.length > 1 &&
+					<Polyline
+						coordinates={pontos.map((ponto) => ({
+							latitude: ponto.latitude,
+							longitude: ponto.longitude,
+						}))}
+						strokeColor="#fff600"
+						strokeWidth={3}
+						fillColor="#fff600"
+					/>
 				}
 			</MapView>
 

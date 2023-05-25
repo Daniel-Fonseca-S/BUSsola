@@ -1,15 +1,46 @@
+import React from "react";
 import { useState } from "react";
+import Loading from "../loading";
+import firebase from "src/utils/firebase";
 import { routes } from "../../utils/routes";
+import * as ImagePicker from "expo-image-picker";
+import useUsuario from "src/utils/hooks/useUsuario";
+import { getDatabase, ref, update } from "firebase/database";
 import { navigationPop, navigationPush } from "src/utils/navigationFun";
 import { Image, Modal, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React from "react";
-import useUsuario from "src/utils/hooks/useUsuario";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function Menu() {
-	const [menuAtivo, setMenuAtivo] = useState(false);
 	const usuario = useUsuario();
+	const [loading, setLoading] = useState(false);
+	const [menuAtivo, setMenuAtivo] = useState(false);
 	const base64Image = `data:image/png;base64,${usuario?.image}`;
+
+	const database = getDatabase(firebase);
+
+	const pickImage = async () => {
+		setLoading(true);
+		// No permissions request is necessary for launching the image library
+		const result = await ImagePicker.launchImageLibraryAsync({
+			mediaTypes: ImagePicker.MediaTypeOptions.Images,
+			base64: true,
+			allowsEditing: true,
+			aspect: [4, 4],
+			quality: 1,
+		});
+
+		if (!result.canceled) {
+			if (result.assets[0].base64 != undefined) {
+				await update(ref(database, "usuario/" + usuario?.uid), {
+					image: result.assets[0].base64,
+				});
+			}
+		} else {
+			console.log("Imagem não selecionada");
+		}
+
+		setLoading(false);
+	};
 
 	return (
 		<View style={styles.container}>
@@ -21,19 +52,20 @@ export default function Menu() {
 			<Modal visible={menuAtivo} transparent={true} onRequestClose={() => setMenuAtivo(false)}>
 				<SafeAreaView style={styles.safearea}>
 					<View style={styles.content}>
+						<Loading carregando={loading} />
 						<TouchableOpacity onPress={() => navigationPop()} style={menuAtivo ? styles.back : styles.disabled}>
 							<Image source={require("src/assets/icons/back.png")} style={styles.hamburguerIcon} />
 						</TouchableOpacity>
 						<TouchableOpacity style={{ zIndex: 99, alignItems: "center" }} onPress={() => setMenuAtivo(false)}>
 							<Image source={require("src/assets/icons/close.png")} style={menuAtivo ? styles.closeIcon : styles.disabled} />
 						</TouchableOpacity>
-						<View style={styles.userImage}>
+						<TouchableOpacity style={styles.userImage} onPress={() => pickImage()} disabled={loading}>
 							{usuario?.image === "" ?
 								<Image source={require("src/assets/icons/user.png")} style={{ width: 100, height: 100, borderRadius: 50 }} />
 								:
 								<Image source={{ uri: base64Image }} style={{ width: 100, height: 100, borderRadius: 50 }} />
 							}
-						</View>
+						</TouchableOpacity>
 						<View style={styles.userInfo}>
 							<Text>{usuario?.email}</Text>
 							<Text>Cidade: {usuario?.resideCidade?.nome ? usuario?.resideCidade?.nome : "Não definida"}</Text>

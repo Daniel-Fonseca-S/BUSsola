@@ -10,5 +10,6 @@ export default interface Usuario {
     telefone: string;
     resideCidade: Cidade;
     resideEstado: Estado;
+    onibus?: boolean;
     rota: Rota;
 }

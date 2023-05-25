@@ -1,13 +1,12 @@
-import Icon from "@expo/vector-icons/MaterialCommunityIcons";
-import { Button, IconButton, Stack, Text, TextInput } from "@react-native-material/core";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { child, get, getDatabase, ref } from "firebase/database";
 import { useEffect, useState } from "react";
-import { Alert, Image, KeyboardAvoidingView, StyleSheet, TouchableOpacity } from "react-native";
-import Loading from "src/components/loading";
 import Usuario from "src/model/usuario";
-import firebase from "src/utils/firebase";
+import Loading from "src/components/loading";
 import useSetUsuario from "src/utils/hooks/setUsuario";
+import Icon from "@expo/vector-icons/MaterialCommunityIcons";
+import { getDatabase, onValue, ref } from "firebase/database";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { Button, IconButton, Stack, Text, TextInput } from "@react-native-material/core";
+import { Alert, Image, KeyboardAvoidingView, StyleSheet, TouchableOpacity } from "react-native";
 
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -21,34 +20,31 @@ export default function Login({ navigation }: any) {
 	// eslint-disable-next-line @typescript-eslint/no-var-requires
 	const logo = require("../../../assets/logo.png");
 
-	const database = getDatabase(firebase);
+	const database = getDatabase();
 
-	const login = () => {
+	const login = async () => {
 		const auth = getAuth();
 		setCarregando(true);
-		signInWithEmailAndPassword(auth, email, senha)
+		await signInWithEmailAndPassword(auth, email, senha)
 			.then(() => {
-				setCarregando(false);
 				navigation.navigate("Home");
 				if (auth.currentUser)
-					get(child(ref(database), "usuario/" + auth.currentUser.uid)).then((snapshot) => {
+					onValue(ref(database, "usuario/" + auth.currentUser.uid), (snapshot) => {
 						if (snapshot.exists()) setUsuario({ ...snapshot.val(), uid: snapshot.key } as Usuario);
 						else console.log("No data available");
-					})
-						.catch((error) => {
-							console.error(error);
-						});
+					});
 			})
 			.catch((error) => {
-				setCarregando(false);
 				Alert.alert("Erro", error.message, [{ text: "OK" }], { cancelable: false });
 			});
+		setCarregando(false);
 	};
 
 	useEffect(() => {
 		const auth = getAuth();
-		if (auth.currentUser) auth.signOut();
-	});
+		if (auth.currentUser) auth.signOut()
+			.catch((error) => console.log(error));
+	}, []);
 
 	useEffect(() => {
 		setUsuario(undefined);
@@ -95,13 +91,13 @@ export default function Login({ navigation }: any) {
 
 				<Loading carregando={carregando} />
 
-				<TouchableOpacity onPress={() => navigation.navigate("Recuperar Senha")}>
+				<TouchableOpacity onPress={() => navigation.navigate("Recuperar Senha")} disabled={carregando}>
 					<Text style={styles.texto}>
 						Esqueceu sua senha?
 					</Text>
 				</TouchableOpacity>
 
-				<TouchableOpacity onPress={() => navigation.navigate("Cadastro")}>
+				<TouchableOpacity onPress={() => navigation.navigate("Cadastro")} disabled={carregando}>
 					<Text style={styles.texto}>
 						Não tem uma conta?
 					</Text>
@@ -111,7 +107,7 @@ export default function Login({ navigation }: any) {
 			<Button
 				title={"Login"}
 				style={styles.botao}
-				disabled={email.length === 0 || senha.length === 0}
+				disabled={email.length === 0 || senha.length === 0 || carregando}
 				onPress={login}
 				trailing={props => <Icon name="login" {...props} />}
 			/>

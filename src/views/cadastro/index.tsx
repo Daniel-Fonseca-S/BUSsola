@@ -5,9 +5,9 @@ import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 import { getDatabase, ref, set } from "firebase/database";
 import React from "react";
 import { Alert, Image, Text, TouchableOpacity, View } from "react-native";
+import Loading from "src/components/loading";
 import firebase from "src/utils/firebase";
 import style from "./style";
-import Loading from "src/components/loading";
 
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -24,27 +24,36 @@ export default function Cadastro({ navigation }: any) {
 
 	const database = getDatabase(firebase);
 
+	const phoneMask = (value: string) => {
+		if (!value) setTelefone("");
+		value = value.replace(/\D/g, "");
+		value = value.replace(/(\d{2})(\d)/, "($1) $2");
+		value = value.replace(/(\d)(\d{4})$/, "$1-$2");
+		setTelefone(value);
+	};
+
 	async function cadastro() {
+		setLoading(true);
 		const auth = getAuth();
-		createUserWithEmailAndPassword(auth, email, senha)
-			.then((userCredential) => {
-				set(ref(database, "usuario/" + userCredential.user.uid), {
+		await createUserWithEmailAndPassword(auth, email, senha)
+			.then(async (userCredential) => {
+				await set(ref(database, "usuario/" + userCredential.user.uid), {
 					telefone: telefone,
 					email: email,
 					senha: senha,
 					image: imagemEnviada,
 				});
 				Alert.alert("Sucesso", "Usuário cadastrado com sucesso!");
-				setLoading(false);
 				navigation.navigate("Log Out");
 			})
 			.catch((error) => {
 				Alert.alert("Erro", error.message, [{ text: "OK" }], { cancelable: false });
-				setLoading(false);
 			});
+		setLoading(false);
 	}
 
 	const pickImage = async () => {
+		setLoading(true);
 		// No permissions request is necessary for launching the image library
 		const result = await ImagePicker.launchImageLibraryAsync({
 			mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -59,22 +68,21 @@ export default function Cadastro({ navigation }: any) {
 			if (result.assets[0].base64 != undefined)
 				setImagemEnviada(result.assets[0].base64);
 		}
+		setLoading(false);
 	};
 
 	return (
 		<View style={styles.container}>
-			<Loading carregando={loading} />
-
 			<View style={styles.content}>
 				<Text style={styles.title}>Cadastre-se</Text>
 				<Text style={{ fontSize: 25, color: "#B7B7B7" }}>Crie uma conta para continuar</Text>
 			</View>
 			<View style={styles.content}>
 				<View style={{ marginBottom: 30, alignItems: "center" }}>
-					<TouchableOpacity onPress={pickImage}>
+					<TouchableOpacity onPress={pickImage} disabled={loading}>
 						<Image
 							style={styles.image}
-							source={(image == undefined) ? require("../../../assets/stock-image-avatar.jpg") : { uri: image }}
+							source={(image === "") ? require("../../../assets/stock-image-avatar.jpg") : { uri: image }}
 						/>
 					</TouchableOpacity>
 					<Button
@@ -84,7 +92,9 @@ export default function Cadastro({ navigation }: any) {
 						titleStyle={styles.buttonTitle}
 						uppercase={false}
 						color="#B7B7B7"
-						onPress={pickImage} />
+						onPress={pickImage}
+						disabled={loading}
+					/>
 				</View>
 				<TextInput
 					style={styles.textInput}
@@ -101,8 +111,9 @@ export default function Cadastro({ navigation }: any) {
 					leading={props => <Icon name="phone" {...props} />}
 					variant="filled"
 					value={telefone}
-					onChangeText={setTelefone}
+					onChangeText={phoneMask}
 				/>
+
 				<TextInput
 					style={styles.textInput}
 					label="Senha"
@@ -120,16 +131,16 @@ export default function Cadastro({ navigation }: any) {
 					secureTextEntry={senhaVisivel}
 				/>
 			</View>
+			<Loading carregando={loading} />
 			<View style={styles.bottomContent}>
 				<Button
 					style={styles.button}
 					title="Cadastrar"
 					contentContainerStyle={{ height: 50 }}
 					onPress={() => {
-						setLoading(true);
 						cadastro();
 					}}
-					disabled={email == "" || telefone == "" || senha == ""}
+					disabled={email == "" || telefone.length < 13 || senha == "" || loading}
 				/>
 				<Text style={{ fontSize: 20, color: "#B7B7B7" }}>Já tem uma conta?</Text>
 				<Button
@@ -140,6 +151,7 @@ export default function Cadastro({ navigation }: any) {
 					uppercase={false}
 					color="#B7B7B7"
 					onPress={() => navigation.navigate("Log Out")}
+					disabled={loading}
 				/>
 			</View>
 		</View>
