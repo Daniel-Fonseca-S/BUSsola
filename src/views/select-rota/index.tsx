@@ -63,6 +63,7 @@ export default function SelecionarRota(vai: any) {
 
 	useEffect(() => {
 		getCidadeUsuario();
+		setRotas([]);
 	}, []);
 
 	useEffect(() => {
@@ -94,7 +95,7 @@ export default function SelecionarRota(vai: any) {
 							title={"Selecionar outra cidade"}
 							color={"#8D28FF"}
 							style={styles.butao}
-							onPress={() => { vai.navigation.goBack(); }}
+							onPress={() => { vai.navigation.navigate("Cidades"); }}
 						/>
 					</Stack>
 				}
