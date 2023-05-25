@@ -89,11 +89,11 @@ export default function SelecionarRota(vai: any) {
 						);
 					})
 					: <Stack>
-						<Text style={styles.lbl}>Nenhuma rota encontrada na cidade selecionada</Text>
+						<Text style={styles.lbl}>Nenhuma rota encontrada nesta cidade</Text>
 						<Button
-							title={"Voltar para a página anterior"}
+							title={"Selecionar outra cidade"}
 							color={"#8D28FF"}
-							style={styles.butn}
+							style={styles.butao}
 							onPress={() => { vai.navigation.goBack(); }}
 						/>
 					</Stack>
@@ -171,8 +171,13 @@ const styles = StyleSheet.create({
 	},
 	lbl: {
 		color: "#B7B7B7",
+		alignSelf: "center",
 	},
 	butn: {
 		width: "22.5%",
-	}
+	},
+	butao: {
+		width: "90%",
+		alignSelf: "center",
+	},
 });
