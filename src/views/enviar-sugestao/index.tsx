@@ -26,7 +26,7 @@ export default function EnviarSugestao({ navigation }: any){
                 </View>
                 <View style={styles.content}>
                     <Text style={{
-                        width: "92%", 
+                        width: "80%", 
                         fontSize: 15, 
                         color: "#8C938D", marginBottom: 15, alignContent: "center"}}>
                             Deixe aqui as suas sugestões de alterações e melhorias a respeito da sua parada.
