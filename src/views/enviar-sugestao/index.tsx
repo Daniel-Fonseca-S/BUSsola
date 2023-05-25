@@ -14,14 +14,22 @@ export default function EnviarSugestao({ navigation }: any){
         <View style={styles.container}>
             <View style={styles.content}>
                 <Menu></Menu>
-                <View style={{width: "70%"}}>
-                    <Text style={{fontSize: 25, color: "#B7B7B7", marginBottom: 10}}>
-                        Encontrou algo de errado com sua parada de embarque - desembarque?
+                <View style={styles.content}>
+                    <Text style={{ 
+                        width: "92%", 
+                        fontSize: 22, 
+                        color: "#B7B7B7", 
+                        marginTop: 15, 
+                        marginBottom: 30}}>
+                            Encontrou algo de errado com sua parada de embarque - desembarque?
                     </Text>                    
                 </View>
                 <View style={styles.content}>
-                    <Text style={{fontSize: 20, color: "#8C938D"}}>
-                        Deixe aqui as suas sugestões de alterações e melhorias a respeito da sua parada.
+                    <Text style={{
+                        width: "92%", 
+                        fontSize: 15, 
+                        color: "#8C938D", marginBottom: 15, alignContent: "center"}}>
+                            Deixe aqui as suas sugestões de alterações e melhorias a respeito da sua parada.
                     </Text>
                     <TextInput     
                         style={styles.textInput}
@@ -29,8 +37,9 @@ export default function EnviarSugestao({ navigation }: any){
                     />
                 </View>
                 <View style={styles.content}>
-                    <Text style={{fontSize: 25, color: "#B7B7B7", marginTop: 10}}>
-                        Estrutual do ponto - pintura - banco - telhado - iluminação Referencias erradas - opções (atualizar referencia, ponto nao encontrado, alteração do ponto) Horário - Adiantado - atrazado Onibus - banco - botão parada
+                    <Text style={{ 
+                        width: "92%", fontSize: 15, color: "#B7B7B7", marginTop: 15}}>
+                            Estrutual do ponto - pintura - banco - telhado - iluminação {'\n'} Referencias erradas - opções (atualizar referencia, ponto nao encontrado,  alteração do ponto){'\n'} Horário - Adiantado - atrasado {'\n'} Onibus - banco - botão parada
                     </Text>
                  
                 </View>
