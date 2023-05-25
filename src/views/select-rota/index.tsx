@@ -88,7 +88,15 @@ export default function SelecionarRota(vai: any) {
 							/>
 						);
 					})
-					: <Text style={styles.lbl}>Nenhuma rota encontrada</Text>
+					: <Stack>
+						<Text style={styles.lbl}>Nenhuma rota encontrada na cidade selecionada</Text>
+						<Button
+							title={"Voltar para a página anterior"}
+							color={"#8D28FF"}
+							style={styles.butn}
+							onPress={() => { vai.navigation.goBack(); }}
+						/>
+					</Stack>
 				}
 			</Stack>
 		</View>
