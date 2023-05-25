@@ -63,6 +63,7 @@ export default function SelecionarRota(vai: any) {
 
 	useEffect(() => {
 		getCidadeUsuario();
+		setRotas([]);
 	}, []);
 
 	useEffect(() => {

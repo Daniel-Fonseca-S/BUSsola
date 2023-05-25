@@ -91,11 +91,11 @@ export default function Login({ navigation }: any) {
 
 				<Loading carregando={carregando} />
 
-				<TouchableOpacity onPress={() => navigation.navigate("Recuperar Senha")} disabled={carregando}>
+				{/* <TouchableOpacity onPress={() => navigation.navigate("Recuperar Senha")} disabled={carregando}>
 					<Text style={styles.texto}>
 						Esqueceu sua senha?
 					</Text>
-				</TouchableOpacity>
+				</TouchableOpacity> */}
 
 				<TouchableOpacity onPress={() => navigation.navigate("Cadastro")} disabled={carregando}>
 					<Text style={styles.texto}>

@@ -3,9 +3,9 @@ import Mapa from "src/views/main";
 import Login from "src/views/login";
 import { RecoilRoot } from "recoil";
 import Cadastro from "src/views/cadastro";
-import NovaSenha from "src/views/nova-senha";
+// import NovaSenha from "src/views/nova-senha";
 import SelecionarRota from "src/views/select-rota";
-import RecuperarSenha from "src/views/recuperar-senha";
+// import RecuperarSenha from "src/views/recuperar-senha";
 import SelecionarCidade from "src/views/select-cidade";
 import EnviarSugestao from "src/views/enviar-sugestao";
 import { SafeAreaView, StyleSheet } from "react-native";
@@ -24,8 +24,8 @@ export default function App() {
 				<NavigationContainer ref={navigationRef}>
 					<Stack.Navigator>
 						<Stack.Screen name="Log Out" component={Login} options={{ headerShown: false }} />
-						<Stack.Screen name="Nova Senha" component={NovaSenha} options={{ headerShown: false }} />
-						<Stack.Screen name="Recuperar Senha" component={RecuperarSenha} options={{ headerShown: false }} />
+						{/* <Stack.Screen name="Nova Senha" component={NovaSenha} options={{ headerShown: false }} /> */}
+						{/* <Stack.Screen name="Recuperar Senha" component={RecuperarSenha} options={{ headerShown: false }} /> */}
 						<Stack.Screen name="Home" component={Mapa} options={{ headerShown: false }} />
 						<Stack.Screen name="Cadastro" component={Cadastro} options={{ headerShown: false }} />
 						<Stack.Screen name="Selecionar Rota" component={SelecionarRota} options={{ headerShown: false }} />
