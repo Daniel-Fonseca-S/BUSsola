@@ -40,8 +40,8 @@ export default function ParadaEmbarque({ route, navigation }: any) {
 				<Button
 					style={styles.button}
 					title="Algo está errado?"
-					contentContainerStyle={{ height: 50 }}
-					onPress={() => { navigation.navigate("Log Out"); }} />
+					contentContainerStyle={{height: 50}}
+					onPress={() => {navigation.navigate("Enviar Sugestao"); }}/>
 			</View>
 		</SafeAreaView>
 	);

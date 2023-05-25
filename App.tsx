@@ -7,6 +7,7 @@ import NovaSenha from "src/views/nova-senha";
 import SelecionarRota from "src/views/select-rota";
 import RecuperarSenha from "src/views/recuperar-senha";
 import SelecionarCidade from "src/views/select-cidade";
+import EnviarSugestao from "src/views/enviar-sugestao";
 import { SafeAreaView, StyleSheet } from "react-native";
 import ParadaEmbarque from "src/views/parada-de-embarque";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -31,6 +32,7 @@ export default function App() {
 						<Stack.Screen name="Parada de Embarque" component={ParadaEmbarque} options={{ headerShown: false }} />
 						<Stack.Screen name="Rotas" component={SelecionarRota} options={{ headerShown: false }} />
 						<Stack.Screen name="Cidades" component={SelecionarCidade} options={{ headerShown: false }} />
+						<Stack.Screen name="Enviar Sugestao" component={EnviarSugestao} options={{ headerShown: false}}/>
 					</Stack.Navigator>
 				</NavigationContainer>
 			</SafeAreaView>
