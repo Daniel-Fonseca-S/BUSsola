@@ -7,7 +7,7 @@ import React from "react";
 import { Alert, Image, Text, TouchableOpacity, View } from "react-native";
 import Loading from "src/components/loading";
 import firebase from "src/utils/firebase";
-import style from "./style";
+import style from "../../utils/style";
 
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

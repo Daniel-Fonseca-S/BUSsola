@@ -1,7 +1,7 @@
 import React from "react";
 import { Image, Text, View, ScrollView, SafeAreaView, Linking } from "react-native";
 import { Button, Divider } from "@react-native-material/core";
-import style from "../cadastro/style";
+import style from "../../utils/style";
 import Menu from "src/components/menu";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
