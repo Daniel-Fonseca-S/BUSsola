@@ -82,7 +82,7 @@ export default function Cadastro({ navigation }: any) {
 					<TouchableOpacity onPress={pickImage} disabled={loading}>
 						<Image
 							style={styles.image}
-							source={(image === "") ? require("../../../assets/stock-image-avatar.jpg") : { uri: image }}
+							source={(image == undefined) ? require("../../../assets/stock-image-avatar.jpg") : { uri: image }}
 						/>
 					</TouchableOpacity>
 					<Button
