@@ -27,6 +27,11 @@
         "foregroundImage": "./assets/logo.png",
         "backgroundColor": "#ffffff"
       },
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyBeALVZQd-ATChrGkvHn5qVj1WDBB_wzJM"
+        }
+      },
       "softwareKeyboardLayoutMode": "pan",
       "permissions": [
         "ACCESS_COARSE_LOCATION",
