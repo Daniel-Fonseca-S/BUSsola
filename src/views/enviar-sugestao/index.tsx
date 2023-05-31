@@ -15,22 +15,12 @@ export default function EnviarSugestao({ navigation }: any) {
 			<View style={styles.content}>
 				<Menu />
 				<View style={styles.content}>
-					<Text style={{
-						width: "92%",
-						fontSize: 22,
-						color: "#B7B7B7",
-						marginTop: 15,
-						marginBottom: 30
-					}}>
+					<Text style={style.textoBrancoMaior}>
 						Encontrou algo de errado com sua parada de embarque - desembarque?
 					</Text>
 				</View>
 				<View style={styles.content}>
-					<Text style={{
-						width: "80%",
-						fontSize: 15,
-						color: "#8C938D", marginBottom: 15, alignContent: "center"
-					}}>
+					<Text style={styles.textoBrancoDeixarSugestao}>
 						Deixe aqui as suas sugestões de alterações e melhorias a respeito da sua parada.
 					</Text>
 					<TextInput
@@ -39,12 +29,9 @@ export default function EnviarSugestao({ navigation }: any) {
 					/>
 				</View>
 				<View style={styles.content}>
-					<Text style={{
-						width: "92%", fontSize: 15, color: "#B7B7B7", marginTop: 15
-					}}>
+					<Text style={styles.textoBranco}>
 						Estrutual do ponto - pintura - banco - telhado - iluminação {"\n"} Referencias erradas - opções (atualizar referencia, ponto nao encontrado,  alteração do ponto){"\n"} Horário - Adiantado - atrasado {"\n"} Onibus - banco - botão parada
 					</Text>
-
 				</View>
 			</View>
 			<View style={styles.bottomContent}>

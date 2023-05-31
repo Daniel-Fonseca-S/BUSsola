@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
 		backgroundColor: "#1E1E1E",
 		alignItems: "center",
 		width: "100%",
-		flex: 1, 
+		flex: 1,
 		justifyContent: "flex-end",
 	},
 	textInput: {
@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
 	textButton: {
 		marginBottom: 15,
 		fontWeight: "bold",
-		
+
 	},
 	buttonTitle: {
 		fontSize: 20,
@@ -53,6 +53,26 @@ const styles = StyleSheet.create({
 		borderRadius: 100,
 		marginBottom: 5,
 		marginTop: 15,
+	},
+	textoBrancoMaior: {
+		width: "92%",
+		fontSize: 22,
+		color: "#B7B7B7",
+		marginTop: 15,
+		marginBottom: 30
+	},
+	textoBranco: {
+		width: "92%",
+		fontSize: 15,
+		color: "#B7B7B7",
+		marginTop: 15
+	},
+	textoBrancoDeixarSugestao: {
+		width: "80%",
+		fontSize: 15,
+		color: "#8C938D",
+		marginBottom: 15,
+		alignContent: "center"
 	}
 });
 
