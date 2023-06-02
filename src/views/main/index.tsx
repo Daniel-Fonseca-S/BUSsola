@@ -55,9 +55,10 @@ export default function Mapa({ navigation }: any) {
 	useEffect(() => {
 		if (usuario?.onibus !== undefined && usuario?.onibus === true) {
 			if (usuario.rota?.id !== undefined) {
-				setTimeout(() => {
-					setBusCurrentLocation();
+				setTimeout(async () => {
+					await setBusCurrentLocation();
 					setFlag(!flag);
+					setFlag2(!flag2);
 				}, 3000);
 			}
 		}
@@ -66,8 +67,9 @@ export default function Mapa({ navigation }: any) {
 	useEffect(() => {
 		if (usuario?.onibus === undefined || usuario?.onibus === false) {
 			if (usuario?.rota?.id !== undefined) {
-				setTimeout(() => {
-					getOnibusLocation();
+				setTimeout(async () => {
+					await getOnibusLocation();
+					setFlag(!flag);
 					setFlag2(!flag2);
 				}, 3000);
 			}
