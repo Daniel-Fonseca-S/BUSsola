@@ -2,7 +2,7 @@ import { Button, Text } from "@react-native-material/core";
 import * as Location from "expo-location";
 import { get, getDatabase, ref, set } from "firebase/database";
 import { useEffect, useState } from "react";
-import { Alert, StyleSheet, View } from "react-native";
+import { Alert, Image, StyleSheet, View } from "react-native";
 import MapView, {
 	Callout,
 	Marker,
@@ -23,15 +23,17 @@ export default function Mapa({ navigation }: any) {
 	const [pontos, setPontos] = useState<Ponto[]>([]);
 	const [rota, setRota] = useState<Rota | undefined>();
 	const [loading, setLoading] = useState<boolean>(false);
+
 	const [flag, setFlag] = useState<boolean>(false);
 	const [flag2, setFlag2] = useState<boolean>(false);
 	const [busLocation, setBusLocation] = useState<Region>();
+	const [currentRegion, setCurrentRegion] = useState<Region>();
 
 	const database = getDatabase();
 
 	useEffect(() => {
 		setLoading(true);
-		getCurrentPosition();
+		getInitialPosition();
 		if (usuario?.resideEstado !== undefined && usuario?.resideCidade !== undefined) getRotaUsuario();
 		else setLoading(false);
 		setBusLocation(undefined);
@@ -59,7 +61,7 @@ export default function Mapa({ navigation }: any) {
 					await setBusCurrentLocation();
 					setFlag(!flag);
 					setFlag2(!flag2);
-				}, 3000);
+				}, 4000);
 			}
 		}
 	}, [flag]);
@@ -71,7 +73,7 @@ export default function Mapa({ navigation }: any) {
 					await getOnibusLocation();
 					setFlag(!flag);
 					setFlag2(!flag2);
-				}, 3000);
+				}, 4000);
 			}
 		}
 	}, [flag2]);
@@ -79,10 +81,11 @@ export default function Mapa({ navigation }: any) {
 	async function setBusCurrentLocation() {
 		setLoading(true);
 		if (usuario?.onibus === true) {
-			if (region !== undefined) {
+			getCurrentPosition();
+			if (currentRegion !== undefined) {
 				await set(ref(database, `estado/${usuario?.resideEstado?.id}/cidade/${usuario?.resideCidade?.id}/rota/${usuario?.rota?.id}/onibus/`), {
-					latitude: region?.latitude,
-					longitude: region?.longitude,
+					latitude: currentRegion?.latitude,
+					longitude: currentRegion?.longitude,
 				}).then(() => {
 					console.log("Data set.");
 				}
@@ -93,6 +96,21 @@ export default function Mapa({ navigation }: any) {
 			}
 		}
 	}
+
+	const getInitialPosition = async () => {
+		setLoading(true);
+		const { status } = await Location.requestForegroundPermissionsAsync();
+
+		if (status !== "granted")
+			Alert.alert("Ops!", "Permissão de acesso a localização negada.");
+
+		const {
+			coords: { latitude, longitude },
+		} = await Location.getCurrentPositionAsync();
+
+		setRegion({ latitude, longitude, latitudeDelta: 0.0922, longitudeDelta: 0.0421 });
+		setLoading(false);
+	};
 
 	const getCurrentPosition = async () => {
 		setLoading(true);
@@ -105,7 +123,7 @@ export default function Mapa({ navigation }: any) {
 			coords: { latitude, longitude },
 		} = await Location.getCurrentPositionAsync();
 
-		setRegion({ latitude, longitude, latitudeDelta: 0.0922, longitudeDelta: 0.0421 });
+		setCurrentRegion({ latitude, longitude, latitudeDelta: 0.0922, longitudeDelta: 0.0421 });
 		setLoading(false);
 	};
 
@@ -207,8 +225,14 @@ export default function Mapa({ navigation }: any) {
 						title="Ônibus"
 						description="Localização do ônibus"
 						pinColor="#8D28FF"
-						image={require("src/assets/icons/bus.png") ?? undefined}
+						// image={require("src/assets/icons/bus.png") ?? undefined}
+						style={{ zIndex: 10, width: 50, height: 50 }}
 					>
+						<Image
+							source={require("src/assets/icons/bus.png") ?? undefined}
+							style={{ width: 50, height: 50 }}
+							resizeMode="contain"
+						/>
 						<Callout tooltip />
 					</Marker>
 				}
