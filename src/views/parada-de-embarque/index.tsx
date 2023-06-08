@@ -14,7 +14,7 @@ export default function ParadaEmbarque({ route, navigation }: any) {
 			<View style={styles.content}>
 				<Menu></Menu>
 				<View style={{ marginHorizontal: 70, alignItems: "center", flexDirection: "row" }}>
-					{ponto.imagem == "" ?  
+					{ponto.imagem == "" || ponto.imagem == "\"\"" || ponto.imagem == undefined ?  
 						<Image style={styles.image} source={require("../../../assets/stock-image-parada.jpg")}></Image>
 						:
 						<Image style={styles.image} source={{uri: `data:image/png;base64,${ponto.imagem}`}}></Image>
@@ -45,7 +45,7 @@ export default function ParadaEmbarque({ route, navigation }: any) {
 					style={styles.button}
 					title="Algo está errado?"
 					contentContainerStyle={{height: 50}}
-					onPress={() => {navigation.navigate("Enviar Sugestao"); }}/>
+					onPress={() => {navigation.navigate("Enviar Sugestao", {ponto}); }}/>
 			</View>
 		</SafeAreaView>
 	);
